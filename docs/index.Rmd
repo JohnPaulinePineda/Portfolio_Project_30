@@ -1,0 +1,114 @@
+---
+title: "R : Comparing Oversampling and Undersampling Algorithms for Class Imbalance Treatment"
+author: "John Pauline Pineda"
+date: "April 29, 2023"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: readable
+    highlight: tango
+    css: doc.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
+```
+
+# **1. Table of Contents**
+
+##  1.1 Sample Data
+
+```{r section_1.1, warning=FALSE, message=FALSE}
+```
+
+##  1.2 Data Quality Assessment
+
+```{r section_1.2, warning=FALSE, message=FALSE}
+```
+
+##  1.3 Data Preprocessing
+
+###  1.3.1 Outlier
+
+```{r section_1.3.1, warning=FALSE, message=FALSE}
+```
+
+###  1.3.2 Zero and Near-Zero Variance
+
+```{r section_1.3.2, warning=FALSE, message=FALSE}
+```
+
+###  1.3.3 Collinearity
+
+```{r section_1.3.3, warning=FALSE, message=FALSE}
+```
+
+###  1.3.4 Linear Dependencies
+
+```{r section_1.3.4, warning=FALSE, message=FALSE}
+```
+
+###  1.3.5 Shape Transformation
+
+```{r section_1.3.5, warning=FALSE, message=FALSE}
+```
+
+###  1.3.6 Centering and Scaling
+
+```{r section_1.3.6, warning=FALSE, message=FALSE}
+```
+
+###  1.3.7 Pre-Processed Dataset
+
+```{r section_1.3.7, warning=FALSE, message=FALSE}
+```
+
+## 1.4 Data Exploration
+
+```{r section_1.4, warning=FALSE, message=FALSE}
+```
+
+## 1.5 Oversampling and Undersampling Algorithms Applied for Class Imbalance using Logistic Regression
+
+###  1.5.1 Original Data (REF)
+
+```{r section_1.5.1, warning=FALSE, message=FALSE}
+```
+
+###  1.5.2 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
+
+```{r section_1.5.2, warning=FALSE, message=FALSE}
+```
+
+###  1.5.3 Oversampling - Borderline Synthetic Minority Oversampling Technique  (OS_BSMOTE)
+
+```{r section_1.5.3, warning=FALSE, message=FALSE}
+```
+
+###  1.5.4 Oversampling - Synthetic Minority Oversampling Technique  (OS_SMOTE)
+
+```{r section_1.5.4, warning=FALSE, message=FALSE}
+```
+
+###  1.5.5 Oversampling - Random Oversampling Examples  (OS_ROSE)
+
+```{r section_1.5.5, warning=FALSE, message=FALSE}
+```
+
+###  1.5.6 Undersampling - Near Miss Algorithm  (US_NM)
+
+```{r section_1.5.6, warning=FALSE, message=FALSE}
+```
+
+###  1.5.7 Undersampling - Tomek Links  (US_TL)
+
+```{r section_1.5.7, warning=FALSE, message=FALSE}
+```
+
+## 1.6 Evaluation Summary
+
+```{r section_1.6, warning=FALSE, message=FALSE}
+```
+
+# **2. References**
