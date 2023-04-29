@@ -867,6 +867,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Original Imbalanced Data Set") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -954,6 +956,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Undersampling - Random Downsampling") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -971,6 +975,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   bake(new_data = NULL) %>%
   ggplot(aes(V1, V11, color = Class)) +
   geom_point() +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
   labs(title = "With Undersampling - Random Downsample") +
@@ -1077,6 +1083,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Oversampling - Random Upsampling") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1096,6 +1104,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Undersampling - Random Upsample") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1200,6 +1210,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Undersampling - Near Miss Algorithm") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1219,6 +1231,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Undersampling - Near Miss Algorithm") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1323,6 +1337,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Undersampling - Tomek Links") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1342,6 +1358,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Undersampling - Tomek Links") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1421,6 +1439,8 @@ LR_US_TOMEK_Model_Predictions %>%
              color = Class)) +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
   ylab("Estimated Rock Detection Probability") +
@@ -1465,6 +1485,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Oversampling - Adaptive Synthetic Algorithm") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1569,6 +1591,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Oversampling - Borderline Synthetic Minority Oversampling Technique") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1588,6 +1612,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Oversampling - Borderline Synthetic Minority Oversampling Technique") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1667,6 +1693,8 @@ LR_OS_BSMOTE_Model_Predictions %>%
              color = Class)) +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
   ylab("Estimated Rock Detection Probability") +
@@ -1692,6 +1720,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Oversampling - Synthetic Minority Oversampling Technique") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1711,6 +1741,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Oversampling - Synthetic Minority Oversampling Technique") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1814,6 +1846,8 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "Without Oversampling - Random Oversampling Examples") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1833,6 +1867,8 @@ recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   labs(title = "With Oversampling - Random Oversampling Examples") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1941,6 +1977,8 @@ LR_ClassDistribution <- PMA_PreModelling_Train_LR %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1955,6 +1993,8 @@ LR_US_DOWNSAMPLE_ClassDistribution <- PMA_PreModelling_Train_LR_US_DOWNSAMPLE %>
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1969,6 +2009,8 @@ LR_OS_UPSAMPLE_ClassDistribution <- PMA_PreModelling_Train_LR_OS_UPSAMPLE %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1983,6 +2025,8 @@ LR_US_NEARMISS_ClassDistribution <- PMA_PreModelling_Train_LR_US_NEARMISS %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -1997,6 +2041,8 @@ LR_US_TOMEK_ClassDistribution <- PMA_PreModelling_Train_LR_US_TOMEK %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -2011,6 +2057,8 @@ LR_OS_ADASYN_ClassDistribution <- PMA_PreModelling_Train_LR_OS_ADASYN %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -2025,6 +2073,8 @@ LR_OS_BSMOTE_ClassDistribution <- PMA_PreModelling_Train_LR_OS_BSMOTE %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -2039,6 +2089,8 @@ LR_OS_SMOTE_ClassDistribution <- PMA_PreModelling_Train_LR_OS_SMOTE %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
@@ -2053,6 +2105,8 @@ LR_OS_ROSE_ClassDistribution <- PMA_PreModelling_Train_LR_OS_ROSE %>%
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
+  scale_x_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
+  scale_y_continuous( limits=c(-4,4), breaks=seq(-4,4,by=1)) +
   theme_bw() +
   facet_grid(. ~ Label) +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
