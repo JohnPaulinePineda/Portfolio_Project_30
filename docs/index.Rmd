@@ -86,6 +86,8 @@ set.seed(12345678)
 Sonar.R.Reduced <- Sonar.R[sample(1:nrow(Sonar.R),25),]
 
 Sonar <- as.data.frame(rbind(Sonar.M,Sonar.R.Reduced))
+Sonar$Class <- factor(Sonar$Class,
+                         levels=c("M","R"))
 
 Sonar_Train <- Sonar[,c("Class","V1","V11")]
 
@@ -800,8 +802,42 @@ dim(PMA_PreModelling_Train)
 ```
 
 ## 1.4 Data Exploration
-
+|
+| Exploratory data analysis:
+|
+| **[A]** Numeric variables which demonstrated a differential relationships with the <span style="color: #FF0000">Class</span> response variable include:
+|      **[A.1]** <span style="color: #FF0000">V1</span> variable (numeric)
+|      **[A.2]** <span style="color: #FF0000">V11</span> variable (numeric)
+|
 ```{r section_1.4, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+EDA <- PMA_PreModelling_Train
+
+##################################
+# Listing all predictors
+##################################
+EDA.Predictors <- EDA[,!names(EDA) %in% c("Class")]
+
+##################################
+# Listing all numeric predictors
+##################################
+EDA.Predictors.Numeric <- EDA.Predictors[,sapply(EDA.Predictors, is.numeric)]
+ncol(EDA.Predictors.Numeric)
+names(EDA.Predictors.Numeric)
+
+##################################
+# Formulating the box plots
+##################################
+featurePlot(x = EDA.Predictors.Numeric, 
+            y = EDA$Class,
+            plot = "box",
+            scales = list(x = list(relation="free", rot = 90), 
+                          y = list(relation="free")),
+            adjust = 1.5, 
+            pch = "|")
+
 ```
 
 ## 1.5 Oversampling and Undersampling Algorithms Applied for Class Imbalance using Logistic Regression
@@ -809,6 +845,80 @@ dim(PMA_PreModelling_Train)
 ###  1.5.1 Original Data (REF)
 
 ```{r section_1.5.1, warning=FALSE, message=FALSE}
+##################################
+# Creating a local object
+# for the train set
+##################################
+PMA_PreModelling_Train_LR <- PMA_PreModelling_Train
+
+##################################
+# Formulating the structure of the
+# Logistic Regression model
+##################################
+LR_Model <- glm(Class ~ V1 + V11,
+                data = PMA_PreModelling_Train_LR,
+                family = binomial)
+
+##################################
+# Consolidating the model results
+##################################
+summary(LR_Model)
+
+LR_Model_Coef <- (as.data.frame(LR_Model$coefficients))
+LR_Model_Coef$Coef <- rownames(LR_Model_Coef)
+LR_Model_Coef$Model <- rep("LR",nrow(LR_Model_Coef))
+colnames(LR_Model_Coef) <- c("Estimates","Coefficients","Model")
+print(LR_Model_Coef, rownames=FALSE)
+
+##################################
+# Computing the model predictions
+##################################
+(LR_Model_Probabilities <- predict(LR_Model, 
+                              type = c("response")))
+
+##################################
+# Creating a classification index
+# based from the model predictions
+##################################
+(LR_Model_Indices <- predict(LR_Model, 
+                           type = c("link")))
+max(LR_Model_Indices)
+min(LR_Model_Indices)
+
+##################################
+# Consolidating the model probabilities
+# and classification index
+# based from the model predictions
+##################################
+LR_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR)
+LR_Model_Predictions$LR_Prob <- LR_Model_Probabilities
+LR_Model_Predictions$LR_LP <- LR_Model_Indices
+LR_Model_Predictions$Class <- as.factor(LR_Model_Predictions$Class)
+LR_Model_Predictions$Label <- rep("LR",nrow(LR_Model_Predictions))
+
+##################################
+# Formulating the probability curve
+# using the consolidated model predictions
+##################################
+LR_Model_Predictions %>%
+  ggplot(aes(x = LR_LP ,
+             y = LR_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Object Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
 ```
 
 ###  1.5.2 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
