@@ -931,7 +931,9 @@ LR_Model_Predictions %>%
 ###  1.5.2 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
 
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
-
+##################################
+# Visualizing the imbalanced data set
+##################################
 ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
@@ -943,6 +945,10 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
         axis.title.y = element_text(color="black", size=12, face="bold"),
         legend.position="top")
 
+##################################
+# Implementing OS_ADASYN
+# Visualizing the oversampled data using OS_ADASYN
+##################################
 recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   step_adasyn(Class, seed=123456789) %>%
   prep() %>%
@@ -969,7 +975,7 @@ bake(new_data = NULL)
 
 ##################################
 # Verifying the class distribution
-# for the upsampled data using OS_ADASYN
+# for the oversampled data using OS_ADASYN
 ##################################
 table(PMA_PreModelling_Train_LR_OS_ADASYN$Class) 
 
@@ -1046,7 +1052,9 @@ LR_OS_ADASYN_Model_Predictions %>%
 ###  1.5.3 Oversampling - Borderline Synthetic Minority Oversampling Technique  (OS_BSMOTE)
 
 ```{r section_1.5.3, warning=FALSE, message=FALSE}
-
+##################################
+# Visualizing the imbalanced data set
+##################################
 ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
@@ -1058,6 +1066,10 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
         axis.title.y = element_text(color="black", size=12, face="bold"),
         legend.position="top")
 
+##################################
+# Implementing OS_BSMOTE
+# Visualizing the oversampled data using OS_BSMOTE
+##################################
 recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   step_bsmote(Class, seed=123456789) %>%
   prep() %>%
@@ -1084,7 +1096,7 @@ bake(new_data = NULL)
 
 ##################################
 # Verifying the class distribution
-# for the upsampled data using OS_BSMOTE
+# for the oversampled data using OS_BSMOTE
 ##################################
 table(PMA_PreModelling_Train_LR_OS_BSMOTE$Class) 
 
@@ -1161,6 +1173,9 @@ LR_OS_BSMOTE_Model_Predictions %>%
 ###  1.5.4 Oversampling - Synthetic Minority Oversampling Technique  (OS_SMOTE)
 
 ```{r section_1.5.4, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
 ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
@@ -1172,6 +1187,10 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
         axis.title.y = element_text(color="black", size=12, face="bold"),
         legend.position="top")
 
+##################################
+# Implementing OS_SMOTE
+# Visualizing the oversampled data using OS_SMOTE
+##################################
 recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   step_smote(Class, seed=123456789) %>%
   prep() %>%
@@ -1198,7 +1217,7 @@ bake(new_data = NULL)
 
 ##################################
 # Verifying the class distribution
-# for the upsampled data using OS_SMOTE
+# for the oversampled data using OS_SMOTE
 ##################################
 table(PMA_PreModelling_Train_LR_OS_SMOTE$Class) 
 
@@ -1275,6 +1294,9 @@ LR_OS_SMOTE_Model_Predictions %>%
 ###  1.5.5 Oversampling - Random Oversampling Examples  (OS_ROSE)
 
 ```{r section_1.5.5, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
 ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
@@ -1286,6 +1308,10 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
         axis.title.y = element_text(color="black", size=12, face="bold"),
         legend.position="top")
 
+##################################
+# Implementing OS_ROSE
+# Visualizing the oversampled data using OS_ROSE
+##################################
 recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   step_rose(Class, seed=123456789) %>%
   prep() %>%
@@ -1312,7 +1338,7 @@ bake(new_data = NULL)
 
 ##################################
 # Verifying the class distribution
-# for the upsampled data using OS_ROSE
+# for the oversampled data using OS_ROSE
 ##################################
 table(PMA_PreModelling_Train_LR_OS_ROSE$Class) 
 
@@ -1389,6 +1415,9 @@ LR_OS_ROSE_Model_Predictions %>%
 ###  1.5.6 Undersampling - Near Miss Algorithm  (US_NM)
 
 ```{r section_1.5.6, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
 ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
@@ -1400,6 +1429,10 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
         axis.title.y = element_text(color="black", size=12, face="bold"),
         legend.position="top")
 
+##################################
+# Implementing US_NEARMISS
+# Visualizing the undersampled data using US_NEARMISS
+##################################
 recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   step_nearmiss(Class, seed=123456789) %>%
   prep() %>%
@@ -1426,7 +1459,7 @@ bake(new_data = NULL)
 
 ##################################
 # Verifying the class distribution
-# for the upsampled data using OS_NEARMISS
+# for the undersampled data using OS_NEARMISS
 ##################################
 table(PMA_PreModelling_Train_LR_OS_NEARMISS$Class) 
 
@@ -1502,6 +1535,9 @@ LR_OS_NEARMISS_Model_Predictions %>%
 ###  1.5.7 Undersampling - Tomek Links  (US_TL)
 
 ```{r section_1.5.7, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
 ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
   geom_point() +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
@@ -1513,6 +1549,10 @@ ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
         axis.title.y = element_text(color="black", size=12, face="bold"),
         legend.position="top")
 
+##################################
+# Implementing US_TOMEK
+# Visualizing the undersampled data using US_TOMEK
+##################################
 recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
   step_tomek(Class, seed=123456789) %>%
   prep() %>%
@@ -1539,7 +1579,7 @@ bake(new_data = NULL)
 
 ##################################
 # Verifying the class distribution
-# for the upsampled data using OS_TOMEK
+# for the undersampled data using OS_TOMEK
 ##################################
 table(PMA_PreModelling_Train_LR_OS_TOMEK$Class) 
 
