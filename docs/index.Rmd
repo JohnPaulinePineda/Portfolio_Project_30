@@ -844,7 +844,7 @@ featurePlot(x = EDA.Predictors.Numeric,
 
 ## 1.5 Oversampling and Undersampling Algorithms Applied for Class Imbalance using Logistic Regression
 
-###  1.5.1 Original Data (REF)
+###  1.5.1 Original Data (LR)
 
 ```{r section_1.5.1, warning=FALSE, message=FALSE}
 ##################################
@@ -944,9 +944,255 @@ LR_Model_Predictions %>%
 
 ```
 
-###  1.5.2 Undersampling - Near Miss Algorithm  (US_NEARMISS)
+###  1.5.2 Undersampling - Random Downsampling  (LR_US_DOWNSAMPLE)
 
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
+ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "Without Undersampling - Random Downsampling") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+##################################
+# Implementing US_DOWNSAMPLE
+# Visualizing the undersampled data using US_DOWNSAMPLE
+##################################
+recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_downsample(Class, seed=123456789) %>%
+  prep() %>%
+  bake(new_data = NULL) %>%
+  ggplot(aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "With Undersampling - Random Downsample") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+US_DOWNSAMPLE <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_downsample(Class, seed=123456789) %>%
+  prep()
+
+PMA_PreModelling_Train_LR_US_DOWNSAMPLE <- US_DOWNSAMPLE %>%
+bake(new_data = NULL)
+
+(PMA_PreModelling_Train_LR_US_DOWNSAMPLE <- as.data.frame(PMA_PreModelling_Train_LR_US_DOWNSAMPLE))
+
+PMA_PreModelling_Train_LR_US_DOWNSAMPLE$Label <- rep("LR_US_DOWNSAMPLE",nrow(PMA_PreModelling_Train_LR_US_DOWNSAMPLE))
+
+##################################
+# Verifying the class distribution
+# for the undersampled data using US_DOWNSAMPLE
+##################################
+table(PMA_PreModelling_Train_LR_US_DOWNSAMPLE$Class) 
+
+##################################
+# Formulating the structure of the
+# Logistic Regression model
+##################################
+LR_US_DOWNSAMPLE_Model <- glm(Class ~ V1 + V11,
+                data = PMA_PreModelling_Train_LR_US_DOWNSAMPLE,
+                family = binomial)
+
+##################################
+# Consolidating the model results
+##################################
+summary(LR_US_DOWNSAMPLE_Model)
+
+LR_US_DOWNSAMPLE_Model_Coef <- (as.data.frame(LR_US_DOWNSAMPLE_Model$coefficients))
+LR_US_DOWNSAMPLE_Model_Coef$Coef <- rownames(LR_US_DOWNSAMPLE_Model_Coef)
+LR_US_DOWNSAMPLE_Model_Coef$Model <- rep("LR_US_DOWNSAMPLE",nrow(LR_US_DOWNSAMPLE_Model_Coef))
+colnames(LR_US_DOWNSAMPLE_Model_Coef) <- c("Estimates","Coefficients","Model")
+print(LR_US_DOWNSAMPLE_Model_Coef, rownames=FALSE)
+
+##################################
+# Computing the model predictions
+##################################
+(LR_US_DOWNSAMPLE_Model_Probabilities <- predict(LR_US_DOWNSAMPLE_Model, 
+                              type = c("response")))
+
+##################################
+# Creating a classification index
+# based from the model predictions
+##################################
+(LR_US_DOWNSAMPLE_Model_Indices <- predict(LR_US_DOWNSAMPLE_Model, 
+                           type = c("link")))
+max(LR_US_DOWNSAMPLE_Model_Indices)
+min(LR_US_DOWNSAMPLE_Model_Indices)
+
+##################################
+# Consolidating the model probabilities
+# and classification index
+# based from the model predictions
+##################################
+LR_US_DOWNSAMPLE_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_US_DOWNSAMPLE)
+LR_US_DOWNSAMPLE_Model_Predictions$LR_US_DOWNSAMPLE_Prob <- LR_US_DOWNSAMPLE_Model_Probabilities
+LR_US_DOWNSAMPLE_Model_Predictions$LR_US_DOWNSAMPLE_LP <- LR_US_DOWNSAMPLE_Model_Indices
+LR_US_DOWNSAMPLE_Model_Predictions$Class <- as.factor(LR_US_DOWNSAMPLE_Model_Predictions$Class)
+LR_US_DOWNSAMPLE_Model_Predictions$Label <- rep("LR_US_DOWNSAMPLE",nrow(LR_US_DOWNSAMPLE_Model_Predictions))
+
+##################################
+# Formulating the probability curve
+# using the consolidated model predictions
+##################################
+LR_US_DOWNSAMPLE_Model_Predictions %>%
+  ggplot(aes(x = LR_US_DOWNSAMPLE_LP ,
+             y = LR_US_DOWNSAMPLE_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (US_DOWNSAMPLE)") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+```
+
+###  1.5.3 Oversampling - Random Upsampling  (LR_US_UPSAMPLE)
+
+```{r section_1.5.3, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
+ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "Without Oversampling - Random Upsampling") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+##################################
+# Implementing OS_UPSAMPLE
+# Visualizing the oversampled data using OS_UPSAMPLE
+##################################
+recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_upsample(Class, seed=123456789) %>%
+  prep() %>%
+  bake(new_data = NULL) %>%
+  ggplot(aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "With Undersampling - Random Upsample") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+OS_UPSAMPLE <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_upsample(Class, seed=123456789) %>%
+  prep()
+
+PMA_PreModelling_Train_LR_OS_UPSAMPLE <- OS_UPSAMPLE %>%
+bake(new_data = NULL)
+
+(PMA_PreModelling_Train_LR_OS_UPSAMPLE <- as.data.frame(PMA_PreModelling_Train_LR_OS_UPSAMPLE))
+
+PMA_PreModelling_Train_LR_OS_UPSAMPLE$Label <- rep("LR_OS_UPSAMPLE",nrow(PMA_PreModelling_Train_LR_OS_UPSAMPLE))
+
+##################################
+# Verifying the class distribution
+# for the oversampled data using OS_UPSAMPLE
+##################################
+table(PMA_PreModelling_Train_LR_OS_UPSAMPLE$Class) 
+
+##################################
+# Formulating the structure of the
+# Logistic Regression model
+##################################
+LR_OS_UPSAMPLE_Model <- glm(Class ~ V1 + V11,
+                data = PMA_PreModelling_Train_LR_OS_UPSAMPLE,
+                family = binomial)
+
+##################################
+# Consolidating the model results
+##################################
+summary(LR_OS_UPSAMPLE_Model)
+
+LR_OS_UPSAMPLE_Model_Coef <- (as.data.frame(LR_OS_UPSAMPLE_Model$coefficients))
+LR_OS_UPSAMPLE_Model_Coef$Coef <- rownames(LR_OS_UPSAMPLE_Model_Coef)
+LR_OS_UPSAMPLE_Model_Coef$Model <- rep("LR_OS_UPSAMPLE",nrow(LR_OS_UPSAMPLE_Model_Coef))
+colnames(LR_OS_UPSAMPLE_Model_Coef) <- c("Estimates","Coefficients","Model")
+print(LR_OS_UPSAMPLE_Model_Coef, rownames=FALSE)
+
+##################################
+# Computing the model predictions
+##################################
+(LR_OS_UPSAMPLE_Model_Probabilities <- predict(LR_OS_UPSAMPLE_Model, 
+                              type = c("response")))
+
+##################################
+# Creating a classification index
+# based from the model predictions
+##################################
+(LR_OS_UPSAMPLE_Model_Indices <- predict(LR_OS_UPSAMPLE_Model, 
+                           type = c("link")))
+max(LR_OS_UPSAMPLE_Model_Indices)
+min(LR_OS_UPSAMPLE_Model_Indices)
+
+##################################
+# Consolidating the model probabilities
+# and classification index
+# based from the model predictions
+##################################
+LR_OS_UPSAMPLE_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_OS_UPSAMPLE)
+LR_OS_UPSAMPLE_Model_Predictions$LR_OS_UPSAMPLE_Prob <- LR_OS_UPSAMPLE_Model_Probabilities
+LR_OS_UPSAMPLE_Model_Predictions$LR_OS_UPSAMPLE_LP <- LR_OS_UPSAMPLE_Model_Indices
+LR_OS_UPSAMPLE_Model_Predictions$Class <- as.factor(LR_OS_UPSAMPLE_Model_Predictions$Class)
+LR_OS_UPSAMPLE_Model_Predictions$Label <- rep("LR_OS_UPSAMPLE",nrow(LR_OS_UPSAMPLE_Model_Predictions))
+
+##################################
+# Formulating the probability curve
+# using the consolidated model predictions
+##################################
+LR_OS_UPSAMPLE_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_UPSAMPLE_LP ,
+             y = LR_OS_UPSAMPLE_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (OS_UPSAMPLE)") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+```
+
+###  1.5.4 Undersampling - Near Miss Algorithm  (LR_US_NEARMISS)
+
+```{r section_1.5.4, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1067,9 +1313,9 @@ LR_US_NEARMISS_Model_Predictions %>%
 
 ```
 
-###  1.5.3 Undersampling - Tomek Links  (US_TOMEK)
+###  1.5.5 Undersampling - Tomek Links  (LR_US_TOMEK)
 
-```{r section_1.5.3, warning=FALSE, message=FALSE}
+```{r section_1.5.5, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1190,9 +1436,9 @@ LR_US_TOMEK_Model_Predictions %>%
 
 ```
 
-###  1.5.4 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
+###  1.5.6 Oversampling - Adaptive Synthetic Algorithm (LR_OS_ADASYN)
 
-```{r section_1.5.4, warning=FALSE, message=FALSE}
+```{r section_1.5.6, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1313,9 +1559,9 @@ LR_OS_ADASYN_Model_Predictions %>%
 
 ```
 
-###  1.5.5 Oversampling - Borderline Synthetic Minority Oversampling Technique  (OS_BSMOTE)
+###  1.5.7 Oversampling - Borderline Synthetic Minority Oversampling Technique  (LR_OS_BSMOTE)
 
-```{r section_1.5.5, warning=FALSE, message=FALSE}
+```{r section_1.5.7, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1436,9 +1682,9 @@ LR_OS_BSMOTE_Model_Predictions %>%
 
 ```
 
-###  1.5.6 Oversampling - Synthetic Minority Oversampling Technique  (OS_SMOTE)
+###  1.5.8 Oversampling - Synthetic Minority Oversampling Technique  (LR_OS_SMOTE)
 
-```{r section_1.5.6, warning=FALSE, message=FALSE}
+```{r section_1.5.8, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1558,9 +1804,9 @@ LR_OS_SMOTE_Model_Predictions %>%
 
 ```
 
-###  1.5.7 Oversampling - Random Oversampling Examples  (OS_ROSE)
+###  1.5.9 Oversampling - Random Oversampling Examples  (LR_OS_ROSE)
 
-```{r section_1.5.7, warning=FALSE, message=FALSE}
+```{r section_1.5.9, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1702,6 +1948,34 @@ LR_ClassDistribution <- PMA_PreModelling_Train_LR %>%
         axis.title.y = element_text(color="black", size=10, face="bold"),
         legend.position="top")
 
+LR_US_DOWNSAMPLE_ClassDistribution <- PMA_PreModelling_Train_LR_US_DOWNSAMPLE %>%  
+  ggplot(aes(x = V1, 
+             y = V11, 
+             color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  theme_bw() +
+  facet_grid(. ~ Label) +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+LR_OS_UPSAMPLE_ClassDistribution <- PMA_PreModelling_Train_LR_OS_UPSAMPLE %>%  
+  ggplot(aes(x = V1, 
+             y = V11, 
+             color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  theme_bw() +
+  facet_grid(. ~ Label) +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
 LR_US_NEARMISS_ClassDistribution <- PMA_PreModelling_Train_LR_US_NEARMISS %>%  
   ggplot(aes(x = V1, 
              y = V11, 
@@ -1787,6 +2061,8 @@ LR_OS_ROSE_ClassDistribution <- PMA_PreModelling_Train_LR_OS_ROSE %>%
         legend.position="top")
 
 RDD_ClassDistribution <- ggarrange(LR_ClassDistribution,
+                                   LR_US_DOWNSAMPLE_ClassDistribution,
+                                   LR_OS_UPSAMPLE_ClassDistribution,
                                    LR_US_NEARMISS_ClassDistribution,
                                    LR_US_TOMEK_ClassDistribution,
                                    LR_OS_ADASYN_ClassDistribution,
@@ -1807,6 +2083,44 @@ annotate_figure(RDD_ClassDistribution,
 LR_LogisticCurvePlot <- LR_Model_Predictions %>%
   ggplot(aes(x = LR_LP ,
              y = LR_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_US_DOWNSAMPLE_LogisticCurvePlot <- LR_US_DOWNSAMPLE_Model_Predictions %>%
+  ggplot(aes(x = LR_US_DOWNSAMPLE_LP ,
+             y = LR_US_DOWNSAMPLE_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_OS_UPSAMPLE_LogisticCurvePlot <- LR_OS_UPSAMPLE_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_UPSAMPLE_LP ,
+             y = LR_OS_UPSAMPLE_Prob,
              color = Class)) +
   scale_colour_manual(values=c("#1846BA55","#B8000055")) +
   geom_point(size=5) +
@@ -1938,6 +2252,8 @@ LR_OS_ROSE_LogisticCurvePlot <-  LR_OS_ROSE_Model_Predictions %>%
         legend.position="top")
 
 RLR_LogisticCurvePlot <- ggarrange(LR_LogisticCurvePlot,
+                                   LR_US_DOWNSAMPLE_LogisticCurvePlot,
+                                   LR_OS_UPSAMPLE_LogisticCurvePlot,
                                    LR_US_NEARMISS_LogisticCurvePlot,
                                    LR_US_TOMEK_LogisticCurvePlot,
                                    LR_OS_ADASYN_LogisticCurvePlot,
