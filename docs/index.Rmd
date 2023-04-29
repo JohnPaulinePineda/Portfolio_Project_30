@@ -16,6 +16,11 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 
 # **1. Table of Contents**
+|
+| This document presents a non-exhaustive list of oversampling and undersampling algorithms applied for severe class imbalance using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.
+|
+| Oversampling and undersampling algorithms address imbalanced classification problems by changing the data set used for model training through non-random resampling to achieve a more reasonably balanced data between the majority and minority classes. In oversampling, new instances are created from the minor class instead of merely creating copies, by selecting two or more similar instances (using a distance measure) and perturbing an instance one attribute at a time by a random amount within the difference to the neighboring instances. In undersampling, The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**caret**</mark>, <mark style="background-color: #CCECFF">**themis**</mark> and <mark style="background-color: #CCECFF">**ROSE**</mark> packages attempt to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class.
+|
 
 ##  1.1 Sample Data
 
@@ -112,3 +117,70 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 
 # **2. References**
+|
+| **[Book]** [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) by Max Kuhn and Kjell Johnson
+| **[Book]** [An Introduction to Statistical Learning](https://www.statlearning.com/) by Gareth James, Daniela Witten, Trevor Hastie and Rob Tibshirani
+| **[Book]** [Multivariate Data Visualization with R](http://lmdvr.r-forge.r-project.org/figures/figures.html) by Deepayan Sarkar
+| **[Book]** [Machine Learning](https://bookdown.org/ssjackson300/Machine-Learning-Lecture-Notes/) by Samuel Jackson
+| **[Book]** [Data Modeling Methods](https://bookdown.org/larget_jacob/data-modeling-methods/) by Jacob Larget
+| **[R Package]** [AppliedPredictiveModeling](https://cran.r-project.org/web//packages/AppliedPredictiveModeling/AppliedPredictiveModeling.pdf) by Max Kuhn
+| **[R Package]** [caret](https://topepo.github.io/caret/index.html) by Max Kuhn
+| **[R Package]** [rpart](https://mran.microsoft.com/web/packages/rpart/rpart.pdf) by Terry Therneau and Beth Atkinson
+| **[R Package]** [lattice](https://cran.r-project.org/web/packages/lattice/lattice.pdf) by  Deepayan Sarkar
+| **[R Package]** [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html/) by Hadley Wickham
+| **[R Package]** [moments](https://cran.r-project.org/web/packages/moments/index.html) by Lukasz Komsta and Frederick
+| **[R Package]** [skimr](https://cran.r-project.org/web/packages/skimr/skimr.pdf) by  Elin Waring
+| **[R Package]** [RANN](https://cran.r-project.org/web/packages/RANN/RANN.pdf) by  Sunil Arya, David Mount, Samuel Kemp and Gregory Jefferis
+| **[R Package]** [corrplot](https://cran.r-project.org/web/packages/corrplot/corrplot.pdf) by Taiyun Wei
+| **[R Package]** [tidyverse](https://cran.r-project.org/web/packages/tidyverse/tidyverse.pdf) by Hadley Wickham
+| **[R Package]** [lares](https://cran.rstudio.com/web/packages/lares/lares.pdf) by Bernardo Lares
+| **[R Package]** [DMwR](https://mran.microsoft.com/snapshot/2016-05-02/web/packages/DMwR/DMwR.pdf) by Luis Torgo
+| **[R Package]** [gridExtra](https://cran.r-project.org/web/packages/gridExtra/gridExtra.pdf) by Baptiste Auguie and Anton Antonov
+| **[R Package]** [rattle](https://cran.r-project.org/web/packages/rattle/rattle.pdf) by Graham Williams
+| **[R Package]** [rpart.plot](https://cran.r-project.org/web/packages/rpart.plot/rpart.plot.pdf) by Stephen Milborrow
+| **[R Package]** [RColorBrewer](https://cran.r-project.org/web//packages/RColorBrewer/RColorBrewer.pdf) by Erich Neuwirth
+| **[R Package]** [stats](https://search.r-project.org/R/refmans/stats/html/00Index.html) by R Core Team
+| **[R Package]** [pls](https://cran.r-project.org/web/packages/pls/pls.pdf) by Kristian Hovde Liland
+| **[R Package]** [nnet](https://cran.r-project.org/web/packages/nnet/nnet.pdf) by Brian Ripley
+| **[R Package]** [elasticnet](https://cran.r-project.org/web/packages/elasticnet/elasticnet.pdf) by Hui Zou
+| **[R Package]** [earth](https://cran.r-project.org/web/packages/earth/earth.pdf) by Stephen Milborrow
+| **[R Package]** [party](https://cran.r-project.org/web/packages/party/party.pdf) by Torsten Hothorn
+| **[R Package]** [kernlab](https://cran.r-project.org/web/packages/kernlab/kernlab.pdf) by Alexandros Karatzoglou
+| **[R Package]** [randomForest](https://cran.r-project.org/web/packages/randomForest/randomForest.pdf) by Andy Liaw
+| **[R Package]** [pROC](https://cran.r-project.org/web/packages/pROC/pROC.pdf) by Xavier Robin
+| **[R Package]** [mda](https://cran.r-project.org/web/packages/mda/mda.pdf) by Trevor Hastie
+| **[R Package]** [klaR](https://cran.r-project.org/web/packages/klaR/klaR.pdf) by Christian Roever, Nils Raabe, Karsten Luebke, Uwe Ligges, Gero Szepannek, Marc Zentgraf and David Meyer
+| **[R Package]** [pamr](https://cran.r-project.org/web/packages/pamr/pamr.pdf) by Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan and Gil Chu
+| **[R Package]** [ROSE](https://cran.r-project.org/web/packages/ROSE/ROSE.pdf) by Nicola Lunardon
+| **[R Package]** [themis](https://cran.r-project.org/web/packages/themis/themis.pdf) by Emil Hvitfeldt
+| **[Article]** [The caret Package](https://topepo.github.io/caret/index.html) by Max Kuhn
+| **[Article]** [A Short Introduction to the caret Package](https://cran.r-project.org/web/packages/caret/vignettes/caret.html) by Max Kuhn
+| **[Article]** [Caret Package – A Practical Guide to Machine Learning in R](https://www.machinelearningplus.com/machine-learning/caret-package/#:~:text=Caret%20is%20short%20for%20Classification%20And%20REgression%20Training.,track%20of%20which%20algorithm%20resides%20in%20which%20package.) by Selva Prabhakaran
+| **[Article]** [Tuning Machine Learning Models Using the Caret R Package](https://machinelearningmastery.com/tuning-machine-learning-models-using-the-caret-r-package/) by Jason Brownlee
+| **[Article]** [Lattice Graphs](http://www.sthda.com/english/wiki/lattice-graphs) by Alboukadel Kassambara
+| **[Article]** [A Tour of Machine Learning Algorithms](https://machinelearningmastery.com/a-tour-of-machine-learning-algorithms/) by Jason Brownlee
+| **[Article]** [Decision Tree Algorithm Examples In Data Mining](https://www.softwaretestinghelp.com/decision-tree-algorithm-examples-data-mining/) by Software Testing Help Team
+| **[Article]** [4 Types of Classification Tasks in Machine Learning](https://machinelearningmastery.com/types-of-classification-in-machine-learning/) by Jason Brownlee
+| **[Article]** [Spot-Check Classification Machine Learning Algorithms in Python with scikit-learn](https://machinelearningmastery.com/spot-check-classification-machine-learning-algorithms-python-scikit-learn/) by Jason Brownlee
+| **[Article]** [Feature Engineering and Selection: A Practical Approach for Predictive Models](http://www.feat.engineering/index.html) by Max Kuhn and Kjell Johnson
+| **[Article]** [Machine Learning Tutorial: A Step-by-Step Guide for Beginners](http://www.feat.engineering/index.html) by Mayank Banoula
+| **[Article]** [Classification Tree](https://support.bccvl.org.au/support/solutions/articles/6000083204-classification-tree) by BCCVL Team
+| **[Article]** [A Gentle Introduction to Imbalanced Classification](https://machinelearningmastery.com/what-is-imbalanced-classification/) by Jason Brownlee
+| **[Article]** [8 Tactics to Combat Imbalanced Classes in Your Machine Learning Dataset](https://machinelearningmastery.com/tactics-to-combat-imbalanced-classes-in-your-machine-learning-dataset/#:~:text=8%20Tactics%20To%20Combat%20Imbalanced%20Training%20Data%201,Different%20Perspective%20...%208%208%29%20Try%20Getting%20Creative) by Jason Brownlee
+| **[Article]** [Step-By-Step Framework for Imbalanced Classification Projects](https://machinelearningmastery.com/framework-for-imbalanced-classification-projects/) by Jason Brownlee
+| **[Article]** [How to Handle Imbalanced Classes in Machine Learning](https://elitedatascience.com/imbalanced-classes) by Elite Data Science Team
+| **[Article]** [Best Ways To Handle Imbalanced Data in Machine Learning](https://dataaspirant.com/handle-imbalanced-data-machine-learning/) by Jaiganesh Nagidi
+| **[Article]** [Handling Imbalanced Data for Classification](https://www.geeksforgeeks.org/handling-imbalanced-data-for-classification/) by Geeks For Geeks Team
+| **[Article]** [Random Oversampling and Undersampling for Imbalanced Classification](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/#:~:text=Random%20undersampling%20involves%20randomly%20selecting%20examples%20from%20the,45%2C%20Imbalanced%20Learning%3A%20Foundations%2C%20Algorithms%2C%20and%20Applications%2C%202013) by Jason Brownlee
+| **[Publication]** [SMOTE: Synthetic Minority Over-Sampling Technique](https://dl.acm.org/doi/10.5555/1622407.1622416) by Nitesh Chawla, Kevin Bowyer, Lawrence Hall and Philip Kegelmeyer (Journal of Artificial Intelligence Research)
+| **[Publication]** [Training and Assessing Classification Rules with Imbalanced Data](https://link.springer.com/article/10.1007/s10618-012-0295-5) by Giovanna Menardi and Nicola Torelli (Data Mining and Knowledge Discovery)
+| **[Publication]** [A Study of the Behavior of Several Methods for Balancing Machine Learning Training Data](https://dl.acm.org/doi/10.1145/1007730.1007735) by Gustavo Batista, Ronaldo Prati and Maria Carolina Monard (ACM SIGKDD Explorations Newsletter)
+| **[Publication]** [A Survey of Predictive Modelling under Imbalanced Distributiona](https://arxiv.org/abs/1505.01658) by Paula Branco, Luis Torgo and Rita Ribeiro (Arxiv Cornell University)
+| **[Course]** [Applied Data Mining and Statistical Learning](https://online.stat.psu.edu/stat508/) by Penn State Eberly College of Science
+| **[Course]** [Regression Methods](https://online.stat.psu.edu/stat501/) by Penn State Eberly College of Science
+| **[Course]** [Applied Regression Analysis](https://online.stat.psu.edu/stat462/) by Penn State Eberly College of Science
+| **[Course]** [Applied Data Mining and Statistical Learning](https://online.stat.psu.edu/stat508/) by Penn State Eberly College of Science
+|
+|
+|
+|
