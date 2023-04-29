@@ -712,13 +712,91 @@ dim(DPA_BoxCoxTransformed)
 ```
 
 ###  1.3.6 Centering and Scaling
-
+|
+| Centering and scaling data assessment:
+|
+| **[A]** To maintain numerical stability during modelling, centering and scaling transformations were applied on the transformed numeric variables. The <span style="color: #0000FF">center</span> method from the <mark style="background-color: #CCECFF">**caret**</mark> package was implemented which subtracts the average value of a numeric variable to all the values. As a result of centering, the variables had zero mean values. In addition, the <span style="color: #0000FF">scale</span> method, also from the <mark style="background-color: #CCECFF">**caret**</mark> package, was applied which performs a center transformation with each value of the variable divided by its standard deviation. Scaling the data coerced the values to have a common standard deviation of one.
+|
 ```{r section_1.3.6, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DPA <- Sonar_Train
+
+##################################
+# Listing all predictors
+##################################
+DPA.Predictors <- DPA[,!names(DPA) %in% c("Class")]
+
+##################################
+# Listing all numeric predictors
+##################################
+DPA.Predictors.Numeric <- DPA.Predictors[,sapply(DPA.Predictors, is.numeric)]
+
+##################################
+# Applying a Box-Cox transformation
+##################################
+DPA_BoxCox <- preProcess(DPA.Predictors.Numeric, method = c("BoxCox"))
+DPA_BoxCoxTransformed <- predict(DPA_BoxCox, DPA.Predictors.Numeric)
+
+##################################
+# Applying a center and scale data transformation
+##################################
+DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaled <- preProcess(DPA_BoxCoxTransformed, method = c("center","scale"))
+DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed <- predict(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaled, DPA_BoxCoxTransformed)
+
+##################################
+# Gathering descriptive statistics
+##################################
+(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformedSkimmed <- skim(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed))
+
+###################################
+# Verifying the data dimensions
+###################################
+dim(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed)
+
 ```
 
 ###  1.3.7 Pre-Processed Dataset
-
+|
+| Preliminary dataset assessment:
+|
+| **[A]** 136 rows (observations)
+|      **[A.1]** Train Set = 136 observations with class ratio of 80:20
+| 
+| **[B]** 3 columns (variables)
+|      **[B.1]** 1/3 response = <span style="color: #FF0000">Class</span> variable (factor)
+|             **[B.1.1]** Levels = <span style="color: #FF0000">Class=R</span> < <span style="color: #FF0000">Class=M</span>
+|      **[B.2]** 2/3 predictors = All remaining variables (2/2 numeric)
+|
+| **[C]** Pre-processing actions applied:
+|      **[C.1]** Centering, scaling and shape transformation applied to improve data quality
+|      **[C.2]** No outlier treatment applied since the high values noted were contextually valid and sensible 
+|      **[C.3]** No predictors removed due to zero or near-zero variance 
+|      **[C.4]** No predictors removed due to high correlation
+|      **[C.5]** No predictors removed due to linear dependencies
+|
 ```{r section_1.3.7, warning=FALSE, message=FALSE}
+##################################
+# Creating the pre-modelling
+# train set
+##################################
+Class <- DPA$Class 
+PMA.Predictors.Numeric  <- DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed
+PMA_BoxCoxTransformed_CenteredScaledTransformed <- cbind(Class,PMA.Predictors.Numeric)
+PMA_PreModelling_Train <- PMA_BoxCoxTransformed_CenteredScaledTransformed
+
+##################################
+# Gathering descriptive statistics
+##################################
+(PMA_PreModelling_Train_Skimmed <- skim(PMA_PreModelling_Train))
+
+###################################
+# Verifying the data dimensions
+# for the train set
+###################################
+dim(PMA_PreModelling_Train)
+
 ```
 
 ## 1.4 Data Exploration

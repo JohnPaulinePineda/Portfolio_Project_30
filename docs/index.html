@@ -1609,9 +1609,333 @@ package was used to transform their distributional shapes.<br />
 </div>
 <div id="centering-and-scaling" class="section level3">
 <h3>1.3.6 Centering and Scaling</h3>
+<div class="line-block"><br />
+Centering and scaling data assessment:<br />
+<br />
+<strong>[A]</strong> To maintain numerical stability during modelling,
+centering and scaling transformations were applied on the transformed
+numeric variables. The <span style="color: #0000FF">center</span> method
+from the
+<mark style="background-color: #CCECFF"><strong>caret</strong></mark>
+package was implemented which subtracts the average value of a numeric
+variable to all the values. As a result of centering, the variables had
+zero mean values. In addition, the <span style="color: #0000FF">scale</span> method, also from the
+<mark style="background-color: #CCECFF"><strong>caret</strong></mark>
+package, was applied which performs a center transformation with each
+value of the variable divided by its standard deviation. Scaling the
+data coerced the values to have a common standard deviation of
+one.<br />
+</div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading dataset</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>DPA <span class="ot">&lt;-</span> Sonar_Train</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all predictors</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>DPA.Predictors <span class="ot">&lt;-</span> DPA[,<span class="sc">!</span><span class="fu">names</span>(DPA) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Class&quot;</span>)]</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all numeric predictors</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>DPA.Predictors.Numeric <span class="ot">&lt;-</span> DPA.Predictors[,<span class="fu">sapply</span>(DPA.Predictors, is.numeric)]</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying a Box-Cox transformation</span></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>DPA_BoxCox <span class="ot">&lt;-</span> <span class="fu">preProcess</span>(DPA.Predictors.Numeric, <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;BoxCox&quot;</span>))</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>DPA_BoxCoxTransformed <span class="ot">&lt;-</span> <span class="fu">predict</span>(DPA_BoxCox, DPA.Predictors.Numeric)</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying a center and scale data transformation</span></span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaled <span class="ot">&lt;-</span> <span class="fu">preProcess</span>(DPA_BoxCoxTransformed, <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>))</span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed <span class="ot">&lt;-</span> <span class="fu">predict</span>(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaled, DPA_BoxCoxTransformed)</span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Gathering descriptive statistics</span></span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformedSkimmed <span class="ot">&lt;-</span> <span class="fu">skim</span>(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed))</span></code></pre></div>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">DPA.Predictors.Numeric_Bo…</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">136</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<colgroup>
+<col width="12%" />
+<col width="8%" />
+<col width="12%" />
+<col width="4%" />
+<col width="2%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="35%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">V1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-3.56</td>
+<td align="right">-0.56</td>
+<td align="right">-0.02</td>
+<td align="right">0.63</td>
+<td align="right">2.23</td>
+<td align="left">▁▁▇▇▂</td>
+</tr>
+<tr class="even">
+<td align="left">V11</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-2.27</td>
+<td align="right">-0.59</td>
+<td align="right">0.04</td>
+<td align="right">0.57</td>
+<td align="right">2.71</td>
+<td align="left">▂▃▇▂▁</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">###################################</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the data dimensions</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="do">###################################</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed)</span></code></pre></div>
+<pre><code>## [1] 136   2</code></pre>
 </div>
 <div id="pre-processed-dataset" class="section level3">
 <h3>1.3.7 Pre-Processed Dataset</h3>
+<div class="line-block"><br />
+Preliminary dataset assessment:<br />
+<br />
+<strong>[A]</strong> 136 rows (observations)<br />
+     <strong>[A.1]</strong> Train Set = 136 observations with class
+ratio of 80:20<br />
+<br />
+<strong>[B]</strong> 3 columns (variables)<br />
+     <strong>[B.1]</strong> 1/3 response = <span style="color: #FF0000">Class</span> variable (factor)<br />
+            <strong>[B.1.1]</strong> Levels = <span style="color: #FF0000">Class=R</span> &lt; <span style="color: #FF0000">Class=M</span><br />
+     <strong>[B.2]</strong> 2/3 predictors = All remaining variables
+(2/2 numeric)<br />
+<br />
+<strong>[C]</strong> Pre-processing actions applied:<br />
+     <strong>[C.1]</strong> Centering, scaling and shape transformation
+applied to improve data quality<br />
+     <strong>[C.2]</strong> No outlier treatment applied since the high
+values noted were contextually valid and sensible<br />
+     <strong>[C.3]</strong> No predictors removed due to zero or
+near-zero variance<br />
+     <strong>[C.4]</strong> No predictors removed due to high
+correlation<br />
+     <strong>[C.5]</strong> No predictors removed due to linear
+dependencies<br />
+</div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the pre-modelling</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># train set</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>Class <span class="ot">&lt;-</span> DPA<span class="sc">$</span>Class </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>PMA.Predictors.Numeric  <span class="ot">&lt;-</span> DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>PMA_BoxCoxTransformed_CenteredScaledTransformed <span class="ot">&lt;-</span> <span class="fu">cbind</span>(Class,PMA.Predictors.Numeric)</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train <span class="ot">&lt;-</span> PMA_BoxCoxTransformed_CenteredScaledTransformed</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Gathering descriptive statistics</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>(PMA_PreModelling_Train_Skimmed <span class="ot">&lt;-</span> <span class="fu">skim</span>(PMA_PreModelling_Train))</span></code></pre></div>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">PMA_PreModelling_Train</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">136</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="14%" />
+<col width="20%" />
+<col width="11%" />
+<col width="13%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">ordered</th>
+<th align="right">n_unique</th>
+<th align="left">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Class</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">M: 111, R: 25</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<colgroup>
+<col width="12%" />
+<col width="8%" />
+<col width="12%" />
+<col width="4%" />
+<col width="2%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="35%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">V1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-3.56</td>
+<td align="right">-0.56</td>
+<td align="right">-0.02</td>
+<td align="right">0.63</td>
+<td align="right">2.23</td>
+<td align="left">▁▁▇▇▂</td>
+</tr>
+<tr class="even">
+<td align="left">V11</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-2.27</td>
+<td align="right">-0.59</td>
+<td align="right">0.04</td>
+<td align="right">0.57</td>
+<td align="right">2.71</td>
+<td align="left">▂▃▇▂▁</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="do">###################################</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the data dimensions</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the train set</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="do">###################################</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(PMA_PreModelling_Train)</span></code></pre></div>
+<pre><code>## [1] 136   3</code></pre>
 </div>
 </div>
 <div id="data-exploration" class="section level2">
