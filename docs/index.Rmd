@@ -340,18 +340,239 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 ##  1.3 Data Preprocessing
 
 ###  1.3.1 Outlier
-
+|
+| Outlier data assessment:
+|
+| **[A]** Outliers noted for 2 variables  with the numeric data visualized through a boxplot including observations classified as suspected outliers using the IQR criterion. The IQR criterion means that all observations above the (75th percentile + 1.5 x IQR) or below the (25th percentile - 1.5 x IQR) are suspected outliers, where IQR is the difference between the third quartile (75th percentile) and first quartile (25th percentile). Outlier treatment for numerical stability remains optional depending on potential model requirements for the subsequent steps.
+|      **[A.1]** <span style="color: #FF0000">V1</span> variable (8 outliers detected)
+|      **[A.2]** <span style="color: #FF0000">V11</span> variable (5 outliers detected)
+|
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DPA <- Sonar_Train
+
+##################################
+# Listing all predictors
+##################################
+DPA.Predictors <- DPA[,!names(DPA) %in% c("Class")]
+
+##################################
+# Listing all numeric predictors
+##################################
+DPA.Predictors.Numeric <- DPA.Predictors[,sapply(DPA.Predictors, is.numeric)]
+
+##################################
+# Identifying outliers for the numeric predictors
+##################################
+OutlierCountList <- c()
+
+for (i in 1:ncol(DPA.Predictors.Numeric)) {
+  Outliers <- boxplot.stats(DPA.Predictors.Numeric[,i])$out
+  OutlierCount <- length(Outliers)
+  OutlierCountList <- append(OutlierCountList,OutlierCount)
+  OutlierIndices <- which(DPA.Predictors.Numeric[,i] %in% c(Outliers))
+  boxplot(DPA.Predictors.Numeric[,i], 
+          ylab = names(DPA.Predictors.Numeric)[i], 
+          main = names(DPA.Predictors.Numeric)[i],
+          horizontal=TRUE)
+  mtext(paste0(OutlierCount, " Outlier(s) Detected"))
+}
+
+OutlierCountSummary <- as.data.frame(cbind(names(DPA.Predictors.Numeric),(OutlierCountList)))
+names(OutlierCountSummary) <- c("NumericPredictors","OutlierCount")
+OutlierCountSummary$OutlierCount <- as.numeric(as.character(OutlierCountSummary$OutlierCount))
+NumericPredictorWithOutlierCount <- nrow(OutlierCountSummary[OutlierCountSummary$OutlierCount>0,])
+print(paste0(NumericPredictorWithOutlierCount, " numeric variable(s) were noted with outlier(s)." ))
+
+##################################
+# Gathering descriptive statistics
+##################################
+(DPA_Skimmed <- skim(DPA.Predictors.Numeric))
+
+###################################
+# Verifying the data dimensions
+###################################
+dim(DPA.Predictors.Numeric)
+
 ```
-
 ###  1.3.2 Zero and Near-Zero Variance
-
+|
+| Zero and near-zero variance data assessment:
+|
+| **[A]** No low variance noted for any variable from the previous data quality assessment using a lower threshold.
+|
+| **[B]** No low variance noted for any variables using a preprocessing summary from the <mark style="background-color: #CCECFF">**caret**</mark> package. The <span style="color: #0000FF">nearZeroVar</span> method using both the <span style="color: #0000FF">freqCut</span> and <span style="color: #0000FF">uniqueCut</span> criteria set at 95/5 and 10, respectively, were applied on the dataset.
+|
 ```{r section_1.3.2, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DPA <- Sonar_Train
+
+##################################
+# Gathering descriptive statistics
+##################################
+(DPA_Skimmed <- skim(DPA))
+
+##################################
+# Identifying columns with low variance
+###################################
+DPA_LowVariance <- nearZeroVar(DPA,
+                               freqCut = 95/5,
+                               uniqueCut = 10,
+                               saveMetrics= TRUE)
+(DPA_LowVariance[DPA_LowVariance$nzv,])
+
+if ((nrow(DPA_LowVariance[DPA_LowVariance$nzv,]))==0){
+
+  print("No low variance predictors noted.")
+
+} else {
+
+  print(paste0("Low variance observed for ",
+               (nrow(DPA_LowVariance[DPA_LowVariance$nzv,])),
+               " numeric variable(s) with First.Second.Mode.Ratio>4 and Unique.Count.Ratio<0.10."))
+
+  DPA_LowVarianceForRemoval <- (nrow(DPA_LowVariance[DPA_LowVariance$nzv,]))
+
+  print(paste0("Low variance can be resolved by removing ",
+               (nrow(DPA_LowVariance[DPA_LowVariance$nzv,])),
+               " numeric variable(s)."))
+
+  for (j in 1:DPA_LowVarianceForRemoval) {
+  DPA_LowVarianceRemovedVariable <- rownames(DPA_LowVariance[DPA_LowVariance$nzv,])[j]
+  print(paste0("Variable ",
+               j,
+               " for removal: ",
+               DPA_LowVarianceRemovedVariable))
+  }
+
+  DPA %>%
+  skim() %>%
+  dplyr::filter(skim_variable %in% rownames(DPA_LowVariance[DPA_LowVariance$nzv,]))
+
+  ##################################
+  # Filtering out columns with low variance
+  #################################
+  DPA_ExcludedLowVariance <- DPA[,!names(DPA) %in% rownames(DPA_LowVariance[DPA_LowVariance$nzv,])]
+
+  ##################################
+  # Gathering descriptive statistics
+  ##################################
+  (DPA_ExcludedLowVariance_Skimmed <- skim(DPA_ExcludedLowVariance))
+  
+  ###################################
+  # Verifying the data dimensions
+  ###################################
+  dim(DPA_ExcludedLowVariance)
+  
+} 
+
 ```
 
 ###  1.3.3 Collinearity
 
 ```{r section_1.3.3, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DPA <- Sonar_Train
+
+##################################
+# Listing all predictors
+##################################
+DPA.Predictors <- DPA[,!names(DPA) %in% c("Class")]
+
+##################################
+# Listing all numeric predictors
+##################################
+DPA.Predictors.Numeric <- DPA.Predictors[,sapply(DPA.Predictors, is.numeric)]
+
+##################################
+# Visualizing pairwise correlation between predictors
+##################################
+DPA_CorrelationTest <- cor.mtest(DPA.Predictors.Numeric,
+                       method = "pearson",
+                       conf.level = .95)
+
+corrplot(cor(DPA.Predictors.Numeric,
+             method = "pearson",
+             use="pairwise.complete.obs"), 
+         method = "circle",
+         type = "upper", 
+         order = "original", 
+         tl.col = "black", 
+         tl.cex = 0.75,
+         tl.srt = 90, 
+         sig.level = 0.05, 
+         p.mat = DPA_CorrelationTest$p,
+         insig = "blank")
+
+
+
+##################################
+# Identifying the highly correlated variables
+##################################
+DPA_Correlation <-  cor(DPA.Predictors.Numeric, 
+                        method = "pearson",
+                        use="pairwise.complete.obs")
+(DPA_HighlyCorrelatedCount <- sum(abs(DPA_Correlation[upper.tri(DPA_Correlation)]) > 0.95))
+
+if (DPA_HighlyCorrelatedCount == 0) {
+  
+  print("No highly correlated predictors noted.")
+  
+} else {
+  print(paste0("High correlation observed for ",
+               (DPA_HighlyCorrelatedCount),
+               " pairs of numeric variable(s) with Correlation.Coefficient>0.95."))
+
+  (DPA_HighlyCorrelatedPairs <- corr_cross(DPA.Predictors.Numeric,
+  max_pvalue = 0.05,
+  top = DPA_HighlyCorrelatedCount,
+  rm.na = TRUE,
+  grid = FALSE
+))
+
+}
+
+
+if (DPA_HighlyCorrelatedCount > 0) {
+  DPA_HighlyCorrelated <- findCorrelation(DPA_Correlation, cutoff = 0.95)
+
+  (DPA_HighlyCorrelatedForRemoval <- length(DPA_HighlyCorrelated))
+
+  print(paste0("High correlation can be resolved by removing ",
+               (DPA_HighlyCorrelatedForRemoval),
+               " numeric variable(s)."))
+
+  for (j in 1:DPA_HighlyCorrelatedForRemoval) {
+  DPA_HighlyCorrelatedRemovedVariable <- colnames(DPA.Predictors.Numeric)[DPA_HighlyCorrelated[j]]
+  print(paste0("Variable ",
+               j,
+               " for removal: ",
+               DPA_HighlyCorrelatedRemovedVariable))
+  }
+
+  ##################################
+  # Filtering out columns with high correlation
+  #################################
+  DPA_ExcludedHighCorrelation <- DPA[,-DPA_HighlyCorrelated]
+
+  ##################################
+  # Gathering descriptive statistics
+  ##################################
+  (DPA_ExcludedHighCorrelation_Skimmed <- skim(DPA_ExcludedHighCorrelation))
+  
+  ###################################
+  # Verifying the data dimensions
+  ###################################
+  dim(DPA_ExcludedHighCorrelation)
+
+}
+
 ```
 
 ###  1.3.4 Linear Dependencies
