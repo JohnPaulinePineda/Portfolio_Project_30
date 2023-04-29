@@ -19,12 +19,93 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | This document presents a non-exhaustive list of oversampling and undersampling algorithms applied for severe class imbalance using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.
 |
-| Oversampling and undersampling algorithms address imbalanced classification problems by changing the data set used for model training through non-random resampling to achieve a more reasonably balanced data between the majority and minority classes. In oversampling, new instances are created from the minor class instead of merely creating copies, by selecting two or more similar instances (using a distance measure) and perturbing an instance one attribute at a time by a random amount within the difference to the neighboring instances. In undersampling, The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**caret**</mark>, <mark style="background-color: #CCECFF">**themis**</mark> and <mark style="background-color: #CCECFF">**ROSE**</mark> packages attempt to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class.
+| Oversampling and undersampling algorithms address imbalanced classification problems by changing the data set used for model training through non-random resampling to achieve a more reasonably balanced data between the majority and minority classes. In oversampling, new instances are created from the minor class instead of merely creating copies, by selecting two or more similar instances (using a distance measure) and perturbing an instance one attribute at a time by a random amount within the difference to the neighboring instances. In undersampling, a subset of instances from the majority class is removed based on relationships between nearest neighbors by having the minimum distance in the feature space with other instances belonging to the minority classes. The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**caret**</mark>, <mark style="background-color: #CCECFF">**themis**</mark> and <mark style="background-color: #CCECFF">**ROSE**</mark> packages attempt to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class.
 |
-
 ##  1.1 Sample Data
-
+|
+| The <mark style="background-color: #EEEEEE;color: #FF0000">**Sonar**</mark>  dataset from the  <mark style="background-color: #CCECFF">**mlbench**</mark> package was used for this illustrated example. The original dataset was transformed to simulate class imbalance.
+|
+| Preliminary dataset assessment:
+|
+| **[A]** 136 rows (observations)
+|      **[A.1]** Train Set = 136 observations with class ratio of 80:20
+| 
+| **[B]** 3 columns (variables)
+|      **[B.1]** 1/3 response = <span style="color: #FF0000">Class</span> variable (factor)
+|             **[B.1.1]** Levels = <span style="color: #FF0000">Class=R</span> < <span style="color: #FF0000">Class=M</span>
+|      **[B.2]** 2/3 predictors = All remaining variables (2/2 numeric)
+|     
+| 
 ```{r section_1.1, warning=FALSE, message=FALSE}
+##################################
+# Loading R libraries
+##################################
+library(AppliedPredictiveModeling)
+library(caret)
+library(rpart)
+library(lattice)
+library(dplyr)
+library(tidyr)
+library(moments)
+library(skimr)
+library(RANN)
+library(mlbench)
+library(pls)
+library(corrplot)
+library(lares)
+library(DMwR)
+library(gridExtra)
+library(rattle)
+library(rpart.plot)
+library(RColorBrewer)
+library(stats)
+library(nnet)
+library(elasticnet)
+library(earth)
+library(party)
+library(kernlab)
+library(randomForest)
+library(Cubist)
+library(pROC)
+library(mda)
+library(klaR)
+library(pamr)
+library(ROSE)
+
+##################################
+# Loading source and
+# formulating the train set
+##################################
+data(Sonar)
+
+Sonar.Original <- Sonar
+
+Sonar.M <- Sonar[Sonar$Class=="M",]
+Sonar.R <- Sonar[Sonar$Class=="R",]
+set.seed(12345678)
+Sonar.R.Reduced <- Sonar.R[sample(1:nrow(Sonar.R),25),]
+
+Sonar <- as.data.frame(rbind(Sonar.M,Sonar.R.Reduced))
+
+Sonar_Train <- Sonar
+
+##################################
+# Performing a general exploration of the train set
+##################################
+dim(Sonar_Train)
+str(Sonar_Train)
+summary(Sonar_Train)
+
+##################################
+# Formulating a data type assessment summary
+##################################
+PDA <- Sonar_Train
+(PDA.Summary <- data.frame(
+  Column.Index=c(1:length(names(PDA))),
+  Column.Name= names(PDA), 
+  Column.Type=sapply(PDA, function(x) class(x)), 
+  row.names=NULL)
+)
 ```
 
 ##  1.2 Data Quality Assessment

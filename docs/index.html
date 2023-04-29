@@ -233,6 +233,107 @@ window.buildTabsets = function(tocID) {
 
 
 
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -409,8 +510,360 @@ References</strong></a></li>
 
 <div id="table-of-contents" class="section level1">
 <h1><strong>1. Table of Contents</strong></h1>
+<div class="line-block"><br />
+This document presents a non-exhaustive list of oversampling and
+undersampling algorithms applied for severe class imbalance using
+various helpful packages in
+<mark style="background-color: #CCECFF"><strong>R</strong></mark>.<br />
+<br />
+Oversampling and undersampling algorithms address imbalanced
+classification problems by changing the data set used for model training
+through non-random resampling to achieve a more reasonably balanced data
+between the majority and minority classes. In oversampling, new
+instances are created from the minor class instead of merely creating
+copies, by selecting two or more similar instances (using a distance
+measure) and perturbing an instance one attribute at a time by a random
+amount within the difference to the neighboring instances. In
+undersampling, a subset of instances from the majority class is removed
+based on relationships between nearest neighbors by having the minimum
+distance in the feature space with other instances belonging to the
+minority classes. The algorithms applied in this study (mostly contained
+in the
+<mark style="background-color: #CCECFF"><strong>caret</strong></mark>,
+<mark style="background-color: #CCECFF"><strong>themis</strong></mark>
+and <mark style="background-color: #CCECFF"><strong>ROSE</strong></mark>
+packages attempt to augment imbalanced data prior to model training by
+updating the original data set to minimize the effect of the
+disproportionate ratio of instances in each class.<br />
+</div>
 <div id="sample-data" class="section level2">
 <h2>1.1 Sample Data</h2>
+<div class="line-block"><br />
+The
+<mark style="background-color: #EEEEEE;color: #FF0000"><strong>Sonar</strong></mark>
+dataset from the
+<mark style="background-color: #CCECFF"><strong>mlbench</strong></mark>
+package was used for this illustrated example. The original dataset was
+transformed to simulate class imbalance.<br />
+<br />
+Preliminary dataset assessment:<br />
+<br />
+<strong>[A]</strong> 136 rows (observations)<br />
+     <strong>[A.1]</strong> Train Set = 136 observations with class
+ratio of 80:20<br />
+<br />
+<strong>[B]</strong> 3 columns (variables)<br />
+     <strong>[B.1]</strong> 1/3 response = <span style="color: #FF0000">Class</span> variable (factor)<br />
+            <strong>[B.1.1]</strong> Levels = <span style="color: #FF0000">Class=R</span> &lt; <span style="color: #FF0000">Class=M</span><br />
+     <strong>[B.2]</strong> 2/3 predictors = All remaining variables
+(2/2 numeric)<br />
+<br />
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading R libraries</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AppliedPredictiveModeling)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RANN)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pls)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lares)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DMwR)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rattle)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stats)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(elasticnet)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(earth)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(party)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Cubist)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mda)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(klaR)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pamr)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ROSE)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading source and</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># formulating the train set</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Sonar)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>Sonar.Original <span class="ot">&lt;-</span> Sonar</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>Sonar.M <span class="ot">&lt;-</span> Sonar[Sonar<span class="sc">$</span>Class<span class="sc">==</span><span class="st">&quot;M&quot;</span>,]</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>Sonar.R <span class="ot">&lt;-</span> Sonar[Sonar<span class="sc">$</span>Class<span class="sc">==</span><span class="st">&quot;R&quot;</span>,]</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345678</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>Sonar.R.Reduced <span class="ot">&lt;-</span> Sonar.R[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Sonar.R),<span class="dv">25</span>),]</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>Sonar <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">rbind</span>(Sonar.M,Sonar.R.Reduced))</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>Sonar_Train <span class="ot">&lt;-</span> Sonar</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Performing a general exploration of the train set</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Sonar_Train)</span></code></pre></div>
+<pre><code>## [1] 136  61</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Sonar_Train)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    136 obs. of  61 variables:
+##  $ V1   : num  0.0491 0.1313 0.0201 0.0629 0.0335 ...
+##  $ V2   : num  0.0279 0.2339 0.0423 0.1065 0.0134 ...
+##  $ V3   : num  0.0592 0.3059 0.0554 0.1526 0.0696 ...
+##  $ V4   : num  0.127 0.4264 0.0783 0.1229 0.118 ...
+##  $ V5   : num  0.1772 0.401 0.062 0.1437 0.0348 ...
+##  $ V6   : num  0.1908 0.1791 0.0871 0.119 0.118 ...
+##  $ V7   : num  0.2217 0.1853 0.1201 0.0884 0.1948 ...
+##  $ V8   : num  0.0768 0.0055 0.2707 0.0907 0.1607 ...
+##  $ V9   : num  0.125 0.193 0.121 0.211 0.304 ...
+##  $ V10  : num  0.2028 0.2231 0.0279 0.3597 0.4372 ...
+##  $ V11  : num  0.0947 0.2907 0.2251 0.5466 0.5533 ...
+##  $ V12  : num  0.25 0.226 0.262 0.52 0.577 ...
+##  $ V13  : num  0.221 0.314 0.177 0.513 0.702 ...
+##  $ V14  : num  0.32 0.33 0.371 0.539 0.707 ...
+##  $ V15  : num  0.334 0.366 0.453 0.656 0.737 ...
+##  $ V16  : num  0.332 0.396 0.555 0.871 0.739 ...
+##  $ V17  : num  0.278 0.439 0.462 0.979 0.862 ...
+##  $ V18  : num  0.297 0.467 0.38 0.933 0.946 ...
+##  $ V19  : num  0.295 0.525 0.345 0.792 0.878 ...
+##  $ V20  : num  0.173 0.373 0.267 0.738 0.791 ...
+##  $ V21  : num  0.326 0.224 0.239 0.691 0.576 ...
+##  $ V22  : num  0.383 0.197 0.113 0.385 0.306 ...
+##  $ V23  : num  0.3523 0.4337 0.2556 0.0671 0.0563 ...
+##  $ V24  : num  0.541 0.6532 0.5169 0.0502 0.0239 ...
+##  $ V25  : num  0.523 0.507 0.378 0.272 0.255 ...
+##  $ V26  : num  0.448 0.28 0.408 0.284 0.486 ...
+##  $ V27  : num  0.534 0.416 0.535 0.223 0.503 ...
+##  $ V28  : num  0.532 0.595 0.512 0.191 0.44 ...
+##  $ V29  : num  0.3907 0.5242 0.4544 0.0408 0.2847 ...
+##  $ V30  : num  0.346 0.418 0.426 0.253 0.18 ...
+##  $ V31  : num  0.409 0.371 0.387 0.198 0.356 ...
+##  $ V32  : num  0.464 0.237 0.394 0.189 0.352 ...
+##  $ V33  : num  0.558 0.0863 0.4661 0.2433 0.3321 ...
+##  $ V34  : num  0.573 0.144 0.397 0.196 0.311 ...
+##  $ V35  : num  0.635 0.29 0.219 0.267 0.364 ...
+##  $ V36  : num  0.7563 0.4577 0.1816 0.134 0.0754 ...
+##  $ V37  : num  0.69 0.372 0.102 0.107 0.183 ...
+##  $ V38  : num  0.618 0.337 0.211 0.202 0.182 ...
+##  $ V39  : num  0.538 0.38 0.325 0.179 0.181 ...
+##  $ V40  : num  0.5622 0.4181 0.3697 0.0227 0.1593 ...
+##  $ V41  : num  0.6508 0.3603 0.2912 0.1313 0.0576 ...
+##  $ V42  : num  0.4797 0.2711 0.301 0.1775 0.0954 ...
+##  $ V43  : num  0.374 0.165 0.256 0.155 0.109 ...
+##  $ V44  : num  0.2804 0.1951 0.1927 0.1626 0.0812 ...
+##  $ V45  : num  0.1982 0.2811 0.2062 0.0708 0.0784 ...
+##  $ V46  : num  0.2438 0.2246 0.1751 0.0129 0.0487 ...
+##  $ V47  : num  0.1789 0.1921 0.0841 0.0795 0.0439 ...
+##  $ V48  : num  0.1706 0.15 0.1035 0.0762 0.0586 ...
+##  $ V49  : num  0.0762 0.0665 0.0641 0.0117 0.037 0.0767 0.0187 0.0245 0.0102 0.0436 ...
+##  $ V50  : num  0.0238 0.0193 0.0153 0.0061 0.0185 0.0265 0.0077 0.019 0.0057 0.0224 ...
+##  $ V51  : num  0.0268 0.0156 0.0081 0.0257 0.0302 0.0215 0.0137 0.0063 0.0031 0.0133 ...
+##  $ V52  : num  0.0081 0.0362 0.0191 0.0089 0.0244 0.0331 0.0071 0.0321 0.0163 0.0078 ...
+##  $ V53  : num  0.0129 0.021 0.0182 0.0262 0.0232 0.0111 0.0082 0.0189 0.0099 0.0174 ...
+##  $ V54  : num  0.0161 0.0154 0.016 0.0108 0.0093 0.0088 0.0232 0.0137 0.0084 0.0176 ...
+##  $ V55  : num  0.0063 0.018 0.029 0.0138 0.0159 0.0158 0.0198 0.0277 0.027 0.0038 ...
+##  $ V56  : num  0.0119 0.0013 0.009 0.0187 0.0193 0.0122 0.0074 0.0152 0.0277 0.0129 ...
+##  $ V57  : num  0.0194 0.0106 0.0242 0.023 0.0032 0.0038 0.0035 0.0052 0.0097 0.0066 ...
+##  $ V58  : num  0.014 0.0127 0.0224 0.0057 0.0377 0.0101 0.01 0.0121 0.0054 0.0044 ...
+##  $ V59  : num  0.0332 0.0178 0.019 0.0113 0.0126 0.0228 0.0048 0.0124 0.0148 0.0134 ...
+##  $ V60  : num  0.0439 0.0231 0.0096 0.0131 0.0156 0.0124 0.0019 0.0055 0.0092 0.0092 ...
+##  $ Class: Factor w/ 2 levels &quot;M&quot;,&quot;R&quot;: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Sonar_Train)</span></code></pre></div>
+<pre><code>##        V1                V2                V3                V4         
+##  Min.   :0.00150   Min.   :0.00060   Min.   :0.00150   Min.   :0.00580  
+##  1st Qu.:0.01550   1st Qu.:0.01787   1st Qu.:0.02192   1st Qu.:0.02857  
+##  Median :0.02365   Median :0.03225   Median :0.03790   Median :0.04830  
+##  Mean   :0.03188   Mean   :0.04260   Mean   :0.04747   Mean   :0.06065  
+##  3rd Qu.:0.03925   3rd Qu.:0.05400   3rd Qu.:0.06003   3rd Qu.:0.07762  
+##  Max.   :0.13710   Max.   :0.23390   Max.   :0.30590   Max.   :0.42640  
+##        V5                V6               V7               V8        
+##  Min.   :0.00670   Min.   :0.0102   Min.   :0.0033   Min.   :0.0055  
+##  1st Qu.:0.04253   1st Qu.:0.0690   1st Qu.:0.0827   1st Qu.:0.0938  
+##  Median :0.07045   Median :0.1024   Median :0.1216   Median :0.1222  
+##  Mean   :0.08184   Mean   :0.1096   Mean   :0.1270   Mean   :0.1448  
+##  3rd Qu.:0.10727   3rd Qu.:0.1426   3rd Qu.:0.1666   3rd Qu.:0.1752  
+##  Max.   :0.40100   Max.   :0.3823   Max.   :0.3729   Max.   :0.4590  
+##        V9              V10              V11              V12        
+##  Min.   :0.0075   Min.   :0.0113   Min.   :0.0523   Min.   :0.0236  
+##  1st Qu.:0.1222   1st Qu.:0.1373   1st Qu.:0.1780   1st Qu.:0.1976  
+##  Median :0.1709   Median :0.2079   Median :0.2503   Median :0.2716  
+##  Mean   :0.1967   Mean   :0.2298   Mean   :0.2642   Mean   :0.2800  
+##  3rd Qu.:0.2533   3rd Qu.:0.2799   3rd Qu.:0.3222   3rd Qu.:0.3427  
+##  Max.   :0.6828   Max.   :0.7106   Max.   :0.7342   Max.   :0.5771  
+##       V13              V14              V15              V16        
+##  Min.   :0.0616   Min.   :0.0273   Min.   :0.0092   Min.   :0.0422  
+##  1st Qu.:0.2110   1st Qu.:0.1924   1st Qu.:0.1770   1st Qu.:0.1997  
+##  Median :0.2861   Median :0.2910   Median :0.2958   Median :0.3203  
+##  Mean   :0.2980   Mean   :0.3113   Mean   :0.3226   Mean   :0.3760  
+##  3rd Qu.:0.3620   3rd Qu.:0.3943   3rd Qu.:0.4383   3rd Qu.:0.5315  
+##  Max.   :0.7131   Max.   :0.9970   Max.   :0.9137   Max.   :0.9751  
+##       V17              V18              V19              V20        
+##  Min.   :0.0367   Min.   :0.0375   Min.   :0.1151   Min.   :0.0656  
+##  1st Qu.:0.2125   1st Qu.:0.2429   1st Qu.:0.2987   1st Qu.:0.3721  
+##  Median :0.3160   Median :0.3730   Median :0.4741   Median :0.6223  
+##  Mean   :0.4122   Mean   :0.4539   Mean   :0.5218   Mean   :0.5900  
+##  3rd Qu.:0.6268   3rd Qu.:0.6744   3rd Qu.:0.7585   3rd Qu.:0.8100  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :0.9975   Max.   :1.0000  
+##       V21              V22              V23              V24        
+##  Min.   :0.0512   Min.   :0.0219   Min.   :0.0563   Min.   :0.0239  
+##  1st Qu.:0.4279   1st Qu.:0.3991   1st Qu.:0.4768   1st Qu.:0.5795  
+##  Median :0.7002   Median :0.7099   Median :0.7339   Median :0.7260  
+##  Mean   :0.6390   Mean   :0.6427   Mean   :0.6599   Mean   :0.6873  
+##  3rd Qu.:0.8401   3rd Qu.:0.8401   3rd Qu.:0.8690   3rd Qu.:0.8800  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+##       V25              V26              V27              V28        
+##  Min.   :0.0240   Min.   :0.0921   Min.   :0.0481   Min.   :0.0284  
+##  1st Qu.:0.5524   1st Qu.:0.5324   1st Qu.:0.4903   1st Qu.:0.5348  
+##  Median :0.7211   Median :0.7585   Median :0.7761   Median :0.7573  
+##  Mean   :0.6845   Mean   :0.7028   Mean   :0.7026   Mean   :0.7022  
+##  3rd Qu.:0.8918   3rd Qu.:0.8943   3rd Qu.:0.9271   3rd Qu.:0.9257  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+##       V29              V30              V31              V32        
+##  Min.   :0.0144   Min.   :0.0613   Min.   :0.0482   Min.   :0.0404  
+##  1st Qu.:0.4565   1st Qu.:0.4012   1st Qu.:0.3276   1st Qu.:0.2814  
+##  Median :0.7050   Median :0.6019   Median :0.4378   Median :0.4124  
+##  Mean   :0.6462   Mean   :0.5742   Mean   :0.4869   Mean   :0.4287  
+##  3rd Qu.:0.8589   3rd Qu.:0.7051   3rd Qu.:0.6198   3rd Qu.:0.5444  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :0.9657   Max.   :0.9306  
+##       V33              V34              V35              V36        
+##  Min.   :0.0477   Min.   :0.0212   Min.   :0.0223   Min.   :0.0080  
+##  1st Qu.:0.2420   1st Qu.:0.2115   1st Qu.:0.1628   1st Qu.:0.1422  
+##  Median :0.3866   Median :0.3325   Median :0.2882   Median :0.2751  
+##  Mean   :0.4006   Mean   :0.3803   Mean   :0.3629   Mean   :0.3486  
+##  3rd Qu.:0.5318   3rd Qu.:0.5239   3rd Qu.:0.5480   3rd Qu.:0.4846  
+##  Max.   :1.0000   Max.   :0.9536   Max.   :1.0000   Max.   :1.0000  
+##       V37              V38              V39              V40        
+##  Min.   :0.0351   Min.   :0.0411   Min.   :0.0436   Min.   :0.0227  
+##  1st Qu.:0.1447   1st Qu.:0.1743   1st Qu.:0.1812   1st Qu.:0.1927  
+##  Median :0.2558   Median :0.3163   Median :0.3118   Median :0.2812  
+##  Mean   :0.3346   Mean   :0.3379   Mean   :0.3348   Mean   :0.3081  
+##  3rd Qu.:0.4573   3rd Qu.:0.4381   3rd Qu.:0.4370   3rd Qu.:0.4196  
+##  Max.   :0.9386   Max.   :0.9480   Max.   :0.9709   Max.   :0.9297  
+##       V41              V42              V43              V44        
+##  Min.   :0.0360   Min.   :0.0300   Min.   :0.0308   Min.   :0.0255  
+##  1st Qu.:0.1601   1st Qu.:0.1634   1st Qu.:0.1650   1st Qu.:0.1390  
+##  Median :0.2631   Median :0.2713   Median :0.2500   Median :0.1926  
+##  Mean   :0.2925   Mean   :0.2957   Mean   :0.2667   Mean   :0.2321  
+##  3rd Qu.:0.3958   3rd Qu.:0.4057   3rd Qu.:0.3551   3rd Qu.:0.2847  
+##  Max.   :0.8995   Max.   :0.8246   Max.   :0.7517   Max.   :0.5772  
+##       V45              V46               V47               V48         
+##  Min.   :0.0298   Min.   :0.00800   Min.   :0.01790   Min.   :0.00410  
+##  1st Qu.:0.1009   1st Qu.:0.07995   1st Qu.:0.07675   1st Qu.:0.05278  
+##  Median :0.1582   Median :0.13825   Median :0.11035   Median :0.09105  
+##  Mean   :0.2247   Mean   :0.18297   Mean   :0.13682   Mean   :0.10258  
+##  3rd Qu.:0.2881   3rd Qu.:0.22310   3rd Qu.:0.17285   3rd Qu.:0.13430  
+##  Max.   :0.7034   Max.   :0.72920   Max.   :0.55220   Max.   :0.33390  
+##       V49               V50               V51               V52         
+##  Min.   :0.00730   Min.   :0.00440   Min.   :0.00090   Min.   :0.00130  
+##  1st Qu.:0.03107   1st Qu.:0.01215   1st Qu.:0.01070   1st Qu.:0.00890  
+##  Median :0.05180   Median :0.01905   Median :0.01550   Median :0.01245  
+##  Mean   :0.05973   Mean   :0.02236   Mean   :0.01811   Mean   :0.01530  
+##  3rd Qu.:0.07710   3rd Qu.:0.02705   3rd Qu.:0.02175   3rd Qu.:0.01802  
+##  Max.   :0.19810   Max.   :0.08250   Max.   :0.10040   Max.   :0.07090  
+##       V53                V54                V55                V56          
+##  Min.   :0.000500   Min.   :0.001000   Min.   :0.001100   Min.   :0.000400  
+##  1st Qu.:0.005575   1st Qu.:0.005475   1st Qu.:0.003800   1st Qu.:0.004350  
+##  Median :0.010200   Median :0.009450   Median :0.007450   Median :0.007050  
+##  Mean   :0.011371   Mean   :0.011733   Mean   :0.009685   Mean   :0.008433  
+##  3rd Qu.:0.015375   3rd Qu.:0.015500   3rd Qu.:0.012725   3rd Qu.:0.011625  
+##  Max.   :0.039000   Max.   :0.035200   Max.   :0.044700   Max.   :0.039400  
+##       V57                V58                V59                V60          
+##  Min.   :0.000900   Min.   :0.000600   Min.   :0.000100   Min.   :0.000600  
+##  1st Qu.:0.003700   1st Qu.:0.003600   1st Qu.:0.003575   1st Qu.:0.003100  
+##  Median :0.005750   Median :0.006250   Median :0.006900   Median :0.005300  
+##  Mean   :0.007597   Mean   :0.008379   Mean   :0.008494   Mean   :0.006685  
+##  3rd Qu.:0.010525   3rd Qu.:0.010825   3rd Qu.:0.011225   3rd Qu.:0.008625  
+##  Max.   :0.035500   Max.   :0.044000   Max.   :0.036400   Max.   :0.043900  
+##  Class  
+##  M:111  
+##  R: 25  
+##         
+##         
+##         
+## </code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulating a data type assessment summary</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>PDA <span class="ot">&lt;-</span> Sonar_Train</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>(PDA.Summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Index=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">names</span>(PDA))),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Name=</span> <span class="fu">names</span>(PDA), </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Type=</span><span class="fu">sapply</span>(PDA, <span class="cf">function</span>(x) <span class="fu">class</span>(x)), </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">NULL</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##    Column.Index Column.Name Column.Type
+## 1             1          V1     numeric
+## 2             2          V2     numeric
+## 3             3          V3     numeric
+## 4             4          V4     numeric
+## 5             5          V5     numeric
+## 6             6          V6     numeric
+## 7             7          V7     numeric
+## 8             8          V8     numeric
+## 9             9          V9     numeric
+## 10           10         V10     numeric
+## 11           11         V11     numeric
+## 12           12         V12     numeric
+## 13           13         V13     numeric
+## 14           14         V14     numeric
+## 15           15         V15     numeric
+## 16           16         V16     numeric
+## 17           17         V17     numeric
+## 18           18         V18     numeric
+## 19           19         V19     numeric
+## 20           20         V20     numeric
+## 21           21         V21     numeric
+## 22           22         V22     numeric
+## 23           23         V23     numeric
+## 24           24         V24     numeric
+## 25           25         V25     numeric
+## 26           26         V26     numeric
+## 27           27         V27     numeric
+## 28           28         V28     numeric
+## 29           29         V29     numeric
+## 30           30         V30     numeric
+## 31           31         V31     numeric
+## 32           32         V32     numeric
+## 33           33         V33     numeric
+## 34           34         V34     numeric
+## 35           35         V35     numeric
+## 36           36         V36     numeric
+## 37           37         V37     numeric
+## 38           38         V38     numeric
+## 39           39         V39     numeric
+## 40           40         V40     numeric
+## 41           41         V41     numeric
+## 42           42         V42     numeric
+## 43           43         V43     numeric
+## 44           44         V44     numeric
+## 45           45         V45     numeric
+## 46           46         V46     numeric
+## 47           47         V47     numeric
+## 48           48         V48     numeric
+## 49           49         V49     numeric
+## 50           50         V50     numeric
+## 51           51         V51     numeric
+## 52           52         V52     numeric
+## 53           53         V53     numeric
+## 54           54         V54     numeric
+## 55           55         V55     numeric
+## 56           56         V56     numeric
+## 57           57         V57     numeric
+## 58           58         V58     numeric
+## 59           59         V59     numeric
+## 60           60         V60     numeric
+## 61           61       Class      factor</code></pre>
 </div>
 <div id="data-quality-assessment" class="section level2">
 <h2>1.2 Data Quality Assessment</h2>
@@ -475,6 +928,156 @@ Technique (OS_BSMOTE)</h3>
 </div>
 <div id="references" class="section level1">
 <h1><strong>2. References</strong></h1>
+<div class="line-block"><br />
+<strong>[Book]</strong> <a href="http://appliedpredictivemodeling.com/">Applied Predictive
+Modeling</a> by Max Kuhn and Kjell Johnson<br />
+<strong>[Book]</strong> <a href="https://www.statlearning.com/">An
+Introduction to Statistical Learning</a> by Gareth James, Daniela
+Witten, Trevor Hastie and Rob Tibshirani<br />
+<strong>[Book]</strong> <a href="http://lmdvr.r-forge.r-project.org/figures/figures.html">Multivariate
+Data Visualization with R</a> by Deepayan Sarkar<br />
+<strong>[Book]</strong> <a href="https://bookdown.org/ssjackson300/Machine-Learning-Lecture-Notes/">Machine
+Learning</a> by Samuel Jackson<br />
+<strong>[Book]</strong> <a href="https://bookdown.org/larget_jacob/data-modeling-methods/">Data
+Modeling Methods</a> by Jacob Larget<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web//packages/AppliedPredictiveModeling/AppliedPredictiveModeling.pdf">AppliedPredictiveModeling</a>
+by Max Kuhn<br />
+<strong>[R Package]</strong> <a href="https://topepo.github.io/caret/index.html">caret</a> by Max
+Kuhn<br />
+<strong>[R Package]</strong> <a href="https://mran.microsoft.com/web/packages/rpart/rpart.pdf">rpart</a>
+by Terry Therneau and Beth Atkinson<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/lattice/lattice.pdf">lattice</a>
+by Deepayan Sarkar<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/dplyr/index.html/">dplyr</a>
+by Hadley Wickham<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/moments/index.html">moments</a>
+by Lukasz Komsta and Frederick<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/skimr/skimr.pdf">skimr</a>
+by Elin Waring<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/RANN/RANN.pdf">RANN</a> by
+Sunil Arya, David Mount, Samuel Kemp and Gregory Jefferis<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/corrplot/corrplot.pdf">corrplot</a>
+by Taiyun Wei<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/tidyverse/tidyverse.pdf">tidyverse</a>
+by Hadley Wickham<br />
+<strong>[R Package]</strong> <a href="https://cran.rstudio.com/web/packages/lares/lares.pdf">lares</a>
+by Bernardo Lares<br />
+<strong>[R Package]</strong> <a href="https://mran.microsoft.com/snapshot/2016-05-02/web/packages/DMwR/DMwR.pdf">DMwR</a>
+by Luis Torgo<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/gridExtra/gridExtra.pdf">gridExtra</a>
+by Baptiste Auguie and Anton Antonov<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/rattle/rattle.pdf">rattle</a>
+by Graham Williams<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/rpart.plot/rpart.plot.pdf">rpart.plot</a>
+by Stephen Milborrow<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web//packages/RColorBrewer/RColorBrewer.pdf">RColorBrewer</a>
+by Erich Neuwirth<br />
+<strong>[R Package]</strong> <a href="https://search.r-project.org/R/refmans/stats/html/00Index.html">stats</a>
+by R Core Team<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/pls/pls.pdf">pls</a> by
+Kristian Hovde Liland<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/nnet/nnet.pdf">nnet</a> by
+Brian Ripley<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/elasticnet/elasticnet.pdf">elasticnet</a>
+by Hui Zou<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/earth/earth.pdf">earth</a>
+by Stephen Milborrow<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/party/party.pdf">party</a>
+by Torsten Hothorn<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/kernlab/kernlab.pdf">kernlab</a>
+by Alexandros Karatzoglou<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/randomForest/randomForest.pdf">randomForest</a>
+by Andy Liaw<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/pROC/pROC.pdf">pROC</a> by
+Xavier Robin<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/mda/mda.pdf">mda</a> by
+Trevor Hastie<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/klaR/klaR.pdf">klaR</a> by
+Christian Roever, Nils Raabe, Karsten Luebke, Uwe Ligges, Gero
+Szepannek, Marc Zentgraf and David Meyer<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/pamr/pamr.pdf">pamr</a> by
+Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan and Gil
+Chu<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/ROSE/ROSE.pdf">ROSE</a> by
+Nicola Lunardon<br />
+<strong>[R Package]</strong> <a href="https://cran.r-project.org/web/packages/themis/themis.pdf">themis</a>
+by Emil Hvitfeldt<br />
+<strong>[Article]</strong> <a href="https://topepo.github.io/caret/index.html">The caret Package</a>
+by Max Kuhn<br />
+<strong>[Article]</strong> <a href="https://cran.r-project.org/web/packages/caret/vignettes/caret.html">A
+Short Introduction to the caret Package</a> by Max Kuhn<br />
+<strong>[Article]</strong> <a href="https://www.machinelearningplus.com/machine-learning/caret-package/#:~:text=Caret%20is%20short%20for%20Classification%20And%20REgression%20Training.,track%20of%20which%20algorithm%20resides%20in%20which%20package.">Caret
+Package – A Practical Guide to Machine Learning in R</a> by Selva
+Prabhakaran<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/tuning-machine-learning-models-using-the-caret-r-package/">Tuning
+Machine Learning Models Using the Caret R Package</a> by Jason
+Brownlee<br />
+<strong>[Article]</strong> <a href="http://www.sthda.com/english/wiki/lattice-graphs">Lattice
+Graphs</a> by Alboukadel Kassambara<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/a-tour-of-machine-learning-algorithms/">A
+Tour of Machine Learning Algorithms</a> by Jason Brownlee<br />
+<strong>[Article]</strong> <a href="https://www.softwaretestinghelp.com/decision-tree-algorithm-examples-data-mining/">Decision
+Tree Algorithm Examples In Data Mining</a> by Software Testing Help
+Team<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/types-of-classification-in-machine-learning/">4
+Types of Classification Tasks in Machine Learning</a> by Jason
+Brownlee<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/spot-check-classification-machine-learning-algorithms-python-scikit-learn/">Spot-Check
+Classification Machine Learning Algorithms in Python with
+scikit-learn</a> by Jason Brownlee<br />
+<strong>[Article]</strong> <a href="http://www.feat.engineering/index.html">Feature Engineering and
+Selection: A Practical Approach for Predictive Models</a> by Max Kuhn
+and Kjell Johnson<br />
+<strong>[Article]</strong> <a href="http://www.feat.engineering/index.html">Machine Learning Tutorial:
+A Step-by-Step Guide for Beginners</a> by Mayank Banoula<br />
+<strong>[Article]</strong> <a href="https://support.bccvl.org.au/support/solutions/articles/6000083204-classification-tree">Classification
+Tree</a> by BCCVL Team<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/what-is-imbalanced-classification/">A
+Gentle Introduction to Imbalanced Classification</a> by Jason
+Brownlee<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/tactics-to-combat-imbalanced-classes-in-your-machine-learning-dataset/#:~:text=8%20Tactics%20To%20Combat%20Imbalanced%20Training%20Data%201,Different%20Perspective%20...%208%208%29%20Try%20Getting%20Creative">8
+Tactics to Combat Imbalanced Classes in Your Machine Learning
+Dataset</a> by Jason Brownlee<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/framework-for-imbalanced-classification-projects/">Step-By-Step
+Framework for Imbalanced Classification Projects</a> by Jason
+Brownlee<br />
+<strong>[Article]</strong> <a href="https://elitedatascience.com/imbalanced-classes">How to Handle
+Imbalanced Classes in Machine Learning</a> by Elite Data Science
+Team<br />
+<strong>[Article]</strong> <a href="https://dataaspirant.com/handle-imbalanced-data-machine-learning/">Best
+Ways To Handle Imbalanced Data in Machine Learning</a> by Jaiganesh
+Nagidi<br />
+<strong>[Article]</strong> <a href="https://www.geeksforgeeks.org/handling-imbalanced-data-for-classification/">Handling
+Imbalanced Data for Classification</a> by Geeks For Geeks Team<br />
+<strong>[Article]</strong> <a href="https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/#:~:text=Random%20undersampling%20involves%20randomly%20selecting%20examples%20from%20the,45%2C%20Imbalanced%20Learning%3A%20Foundations%2C%20Algorithms%2C%20and%20Applications%2C%202013">Random
+Oversampling and Undersampling for Imbalanced Classification</a> by
+Jason Brownlee<br />
+<strong>[Publication]</strong> <a href="https://dl.acm.org/doi/10.5555/1622407.1622416">SMOTE: Synthetic
+Minority Over-Sampling Technique</a> by Nitesh Chawla, Kevin Bowyer,
+Lawrence Hall and Philip Kegelmeyer (Journal of Artificial Intelligence
+Research)<br />
+<strong>[Publication]</strong> <a href="https://link.springer.com/article/10.1007/s10618-012-0295-5">Training
+and Assessing Classification Rules with Imbalanced Data</a> by Giovanna
+Menardi and Nicola Torelli (Data Mining and Knowledge Discovery)<br />
+<strong>[Publication]</strong> <a href="https://dl.acm.org/doi/10.1145/1007730.1007735">A Study of the
+Behavior of Several Methods for Balancing Machine Learning Training
+Data</a> by Gustavo Batista, Ronaldo Prati and Maria Carolina Monard
+(ACM SIGKDD Explorations Newsletter)<br />
+<strong>[Publication]</strong> <a href="https://arxiv.org/abs/1505.01658">A Survey of Predictive Modelling
+under Imbalanced Distributiona</a> by Paula Branco, Luis Torgo and Rita
+Ribeiro (Arxiv Cornell University)<br />
+<strong>[Course]</strong> <a href="https://online.stat.psu.edu/stat508/">Applied Data Mining and
+Statistical Learning</a> by Penn State Eberly College of Science<br />
+<strong>[Course]</strong> <a href="https://online.stat.psu.edu/stat501/">Regression Methods</a> by
+Penn State Eberly College of Science<br />
+<strong>[Course]</strong> <a href="https://online.stat.psu.edu/stat462/">Applied Regression
+Analysis</a> by Penn State Eberly College of Science<br />
+<strong>[Course]</strong> <a href="https://online.stat.psu.edu/stat508/">Applied Data Mining and
+Statistical Learning</a> by Penn State Eberly College of Science<br />
+<br />
+<br />
+<br />
+</div>
 </div>
 
 
