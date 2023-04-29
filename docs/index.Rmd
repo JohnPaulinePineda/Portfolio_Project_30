@@ -70,6 +70,7 @@ library(pROC)
 library(mda)
 library(klaR)
 library(pamr)
+library(themis)
 library(ROSE)
 
 ##################################
@@ -852,6 +853,12 @@ featurePlot(x = EDA.Predictors.Numeric,
 PMA_PreModelling_Train_LR <- PMA_PreModelling_Train
 
 ##################################
+# Verifying the class distribution
+# for the original data
+##################################
+table(PMA_PreModelling_Train_LR$Class) 
+
+##################################
 # Formulating the structure of the
 # Logistic Regression model
 ##################################
@@ -924,6 +931,116 @@ LR_Model_Predictions %>%
 ###  1.5.2 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
 
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
+
+ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "Without Oversampling - Adaptive Synthetic Algorithm") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_adasyn(Class, seed=123456789) %>%
+  prep() %>%
+  bake(new_data = NULL) %>%
+  ggplot(aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "With Oversampling - Adaptive Synthetic Algorithm") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+OS_ADASYN <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_adasyn(Class, seed=123456789) %>%
+  prep()
+
+PMA_PreModelling_Train_LR_OS_ADASYN <- OS_ADASYN %>%
+bake(new_data = NULL)
+
+(PMA_PreModelling_Train_LR_OS_ADASYN <- as.data.frame(PMA_PreModelling_Train_LR_OS_ADASYN))
+
+##################################
+# Verifying the class distribution
+# for the upsampled data using OS_ADASYN
+##################################
+table(PMA_PreModelling_Train_LR_OS_ADASYN$Class) 
+
+##################################
+# Formulating the structure of the
+# Logistic Regression model
+##################################
+LR_OS_ADASYN_Model <- glm(Class ~ V1 + V11,
+                data = PMA_PreModelling_Train_LR_OS_ADASYN,
+                family = binomial)
+
+##################################
+# Consolidating the model results
+##################################
+summary(LR_OS_ADASYN_Model)
+
+LR_OS_ADASYN_Model_Coef <- (as.data.frame(LR_OS_ADASYN_Model$coefficients))
+LR_OS_ADASYN_Model_Coef$Coef <- rownames(LR_OS_ADASYN_Model_Coef)
+LR_OS_ADASYN_Model_Coef$Model <- rep("LR_OS_ADASYN",nrow(LR_OS_ADASYN_Model_Coef))
+colnames(LR_OS_ADASYN_Model_Coef) <- c("Estimates","Coefficients","Model")
+print(LR_OS_ADASYN_Model_Coef, rownames=FALSE)
+
+##################################
+# Computing the model predictions
+##################################
+(LR_OS_ADASYN_Model_Probabilities <- predict(LR_OS_ADASYN_Model, 
+                              type = c("response")))
+
+##################################
+# Creating a classification index
+# based from the model predictions
+##################################
+(LR_OS_ADASYN_Model_Indices <- predict(LR_OS_ADASYN_Model, 
+                           type = c("link")))
+max(LR_OS_ADASYN_Model_Indices)
+min(LR_OS_ADASYN_Model_Indices)
+
+##################################
+# Consolidating the model probabilities
+# and classification index
+# based from the model predictions
+##################################
+LR_OS_ADASYN_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_OS_ADASYN)
+LR_OS_ADASYN_Model_Predictions$LR_OS_ADASYN_Prob <- LR_OS_ADASYN_Model_Probabilities
+LR_OS_ADASYN_Model_Predictions$LR_OS_ADASYN_LP <- LR_OS_ADASYN_Model_Indices
+LR_OS_ADASYN_Model_Predictions$Class <- as.factor(LR_OS_ADASYN_Model_Predictions$Class)
+LR_OS_ADASYN_Model_Predictions$Label <- rep("LR_OS_ADASYN",nrow(LR_OS_ADASYN_Model_Predictions))
+
+##################################
+# Formulating the probability curve
+# using the consolidated model predictions
+##################################
+LR_OS_ADASYN_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_ADASYN_LP ,
+             y = LR_OS_ADASYN_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Object Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_ADASYN)") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
 ```
 
 ###  1.5.3 Oversampling - Borderline Synthetic Minority Oversampling Technique  (OS_BSMOTE)
