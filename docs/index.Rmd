@@ -67,6 +67,7 @@ library(kernlab)
 library(randomForest)
 library(Cubist)
 library(pROC)
+library(ggpubr)
 library(mda)
 library(klaR)
 library(pamr)
@@ -915,11 +916,11 @@ LR_Model_Predictions %>%
   geom_point(size=5) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
+  ylab("Estimated Rock Detection Probability") +
   labs(color = "Class") +
   scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
   scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression") +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
         axis.title.x = element_text(color="black", size=12, face="bold"),
@@ -928,9 +929,251 @@ LR_Model_Predictions %>%
 
 ```
 
-###  1.5.2 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
+###  1.5.2 Undersampling - Near Miss Algorithm  (US_NEARMISS)
 
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
+ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "Without Undersampling - Near Miss Algorithm") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+##################################
+# Implementing US_NEARMISS
+# Visualizing the undersampled data using US_NEARMISS
+##################################
+recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_nearmiss(Class, seed=123456789) %>%
+  prep() %>%
+  bake(new_data = NULL) %>%
+  ggplot(aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "With Undersampling - Near Miss Algorithm") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+US_NEARMISS <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_nearmiss(Class, seed=123456789) %>%
+  prep()
+
+PMA_PreModelling_Train_LR_US_NEARMISS <- US_NEARMISS %>%
+bake(new_data = NULL)
+
+(PMA_PreModelling_Train_LR_US_NEARMISS <- as.data.frame(PMA_PreModelling_Train_LR_US_NEARMISS))
+
+##################################
+# Verifying the class distribution
+# for the undersampled data using US_NEARMISS
+##################################
+table(PMA_PreModelling_Train_LR_US_NEARMISS$Class) 
+
+##################################
+# Formulating the structure of the
+# Logistic Regression model
+##################################
+LR_US_NEARMISS_Model <- glm(Class ~ V1 + V11,
+                data = PMA_PreModelling_Train_LR_US_NEARMISS,
+                family = binomial)
+
+##################################
+# Consolidating the model results
+##################################
+summary(LR_US_NEARMISS_Model)
+
+LR_US_NEARMISS_Model_Coef <- (as.data.frame(LR_US_NEARMISS_Model$coefficients))
+LR_US_NEARMISS_Model_Coef$Coef <- rownames(LR_US_NEARMISS_Model_Coef)
+LR_US_NEARMISS_Model_Coef$Model <- rep("LR_US_NEARMISS",nrow(LR_US_NEARMISS_Model_Coef))
+colnames(LR_US_NEARMISS_Model_Coef) <- c("Estimates","Coefficients","Model")
+print(LR_US_NEARMISS_Model_Coef, rownames=FALSE)
+
+##################################
+# Computing the model predictions
+##################################
+(LR_US_NEARMISS_Model_Probabilities <- predict(LR_US_NEARMISS_Model, 
+                              type = c("response")))
+
+##################################
+# Creating a classification index
+# based from the model predictions
+##################################
+(LR_US_NEARMISS_Model_Indices <- predict(LR_US_NEARMISS_Model, 
+                           type = c("link")))
+max(LR_US_NEARMISS_Model_Indices)
+min(LR_US_NEARMISS_Model_Indices)
+
+##################################
+# Consolidating the model probabilities
+# and classification index
+# based from the model predictions
+##################################
+LR_US_NEARMISS_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_US_NEARMISS)
+LR_US_NEARMISS_Model_Predictions$LR_US_NEARMISS_Prob <- LR_US_NEARMISS_Model_Probabilities
+LR_US_NEARMISS_Model_Predictions$LR_US_NEARMISS_LP <- LR_US_NEARMISS_Model_Indices
+LR_US_NEARMISS_Model_Predictions$Class <- as.factor(LR_US_NEARMISS_Model_Predictions$Class)
+LR_US_NEARMISS_Model_Predictions$Label <- rep("LR_US_NEARMISS",nrow(LR_US_NEARMISS_Model_Predictions))
+
+##################################
+# Formulating the probability curve
+# using the consolidated model predictions
+##################################
+LR_US_NEARMISS_Model_Predictions %>%
+  ggplot(aes(x = LR_US_NEARMISS_LP ,
+             y = LR_US_NEARMISS_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (US_NEARMISS)") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+```
+
+###  1.5.3 Undersampling - Tomek Links  (US_TOMEK)
+
+```{r section_1.5.3, warning=FALSE, message=FALSE}
+##################################
+# Visualizing the imbalanced data set
+##################################
+ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "Without Undersampling - Tomek Links") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+##################################
+# Implementing US_TOMEK
+# Visualizing the undersampled data using US_TOMEK
+##################################
+recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_tomek(Class, seed=123456789) %>%
+  prep() %>%
+  bake(new_data = NULL) %>%
+  ggplot(aes(V1, V11, color = Class)) +
+  geom_point() +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  labs(title = "With Undersampling - Tomek Links") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+US_TOMEK <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
+  step_tomek(Class, seed=123456789) %>%
+  prep()
+
+PMA_PreModelling_Train_LR_US_TOMEK <- US_TOMEK %>%
+bake(new_data = NULL)
+
+(PMA_PreModelling_Train_LR_US_TOMEK <- as.data.frame(PMA_PreModelling_Train_LR_US_TOMEK))
+
+##################################
+# Verifying the class distribution
+# for the undersampled data using US_TOMEK
+##################################
+table(PMA_PreModelling_Train_LR_US_TOMEK$Class) 
+
+##################################
+# Formulating the structure of the
+# Logistic Regression model
+##################################
+LR_US_TOMEK_Model <- glm(Class ~ V1 + V11,
+                data = PMA_PreModelling_Train_LR_US_TOMEK,
+                family = binomial)
+
+##################################
+# Consolidating the model results
+##################################
+summary(LR_US_TOMEK_Model)
+
+LR_US_TOMEK_Model_Coef <- (as.data.frame(LR_US_TOMEK_Model$coefficients))
+LR_US_TOMEK_Model_Coef$Coef <- rownames(LR_US_TOMEK_Model_Coef)
+LR_US_TOMEK_Model_Coef$Model <- rep("LR_US_TOMEK",nrow(LR_US_TOMEK_Model_Coef))
+colnames(LR_US_TOMEK_Model_Coef) <- c("Estimates","Coefficients","Model")
+print(LR_US_TOMEK_Model_Coef, rownames=FALSE)
+
+##################################
+# Computing the model predictions
+##################################
+(LR_US_TOMEK_Model_Probabilities <- predict(LR_US_TOMEK_Model, 
+                              type = c("response")))
+
+##################################
+# Creating a classification index
+# based from the model predictions
+##################################
+(LR_US_TOMEK_Model_Indices <- predict(LR_US_TOMEK_Model, 
+                           type = c("link")))
+max(LR_US_TOMEK_Model_Indices)
+min(LR_US_TOMEK_Model_Indices)
+
+##################################
+# Consolidating the model probabilities
+# and classification index
+# based from the model predictions
+##################################
+LR_US_TOMEK_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_US_TOMEK)
+LR_US_TOMEK_Model_Predictions$LR_US_TOMEK_Prob <- LR_US_TOMEK_Model_Probabilities
+LR_US_TOMEK_Model_Predictions$LR_US_TOMEK_LP <- LR_US_TOMEK_Model_Indices
+LR_US_TOMEK_Model_Predictions$Class <- as.factor(LR_US_TOMEK_Model_Predictions$Class)
+LR_US_TOMEK_Model_Predictions$Label <- rep("LR_US_TOMEK",nrow(LR_US_TOMEK_Model_Predictions))
+
+##################################
+# Formulating the probability curve
+# using the consolidated model predictions
+##################################
+LR_US_TOMEK_Model_Predictions %>%
+  ggplot(aes(x = LR_US_TOMEK_LP ,
+             y = LR_US_TOMEK_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (US_TOMEK)") +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=12, face="bold"),
+        axis.title.y = element_text(color="black", size=12, face="bold"),
+        legend.position="top")
+
+```
+
+###  1.5.4 Oversampling - Adaptive Synthetic Algorithm (OS_ADASYN)
+
+```{r section_1.5.4, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1036,11 +1279,11 @@ LR_OS_ADASYN_Model_Predictions %>%
   geom_point(size=5) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
+  ylab("Estimated Rock Detection Probability") +
   labs(color = "Class") +
   scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
   scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_ADASYN)") +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (OS_ADASYN)") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
         axis.title.x = element_text(color="black", size=12, face="bold"),
@@ -1049,9 +1292,9 @@ LR_OS_ADASYN_Model_Predictions %>%
 
 ```
 
-###  1.5.3 Oversampling - Borderline Synthetic Minority Oversampling Technique  (OS_BSMOTE)
+###  1.5.5 Oversampling - Borderline Synthetic Minority Oversampling Technique  (OS_BSMOTE)
 
-```{r section_1.5.3, warning=FALSE, message=FALSE}
+```{r section_1.5.5, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1157,11 +1400,11 @@ LR_OS_BSMOTE_Model_Predictions %>%
   geom_point(size=5) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
+  ylab("Estimated Rock Detection Probability") +
   labs(color = "Class") +
   scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
   scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_BSMOTE)") +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (OS_BSMOTE)") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
         axis.title.x = element_text(color="black", size=12, face="bold"),
@@ -1170,9 +1413,9 @@ LR_OS_BSMOTE_Model_Predictions %>%
 
 ```
 
-###  1.5.4 Oversampling - Synthetic Minority Oversampling Technique  (OS_SMOTE)
+###  1.5.6 Oversampling - Synthetic Minority Oversampling Technique  (OS_SMOTE)
 
-```{r section_1.5.4, warning=FALSE, message=FALSE}
+```{r section_1.5.6, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1278,11 +1521,11 @@ LR_OS_SMOTE_Model_Predictions %>%
   geom_point(size=5) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
+  ylab("Estimated Rock Detection Probability") +
   labs(color = "Class") +
   scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
   scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_SMOTE)") +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (OS_SMOTE)") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
         axis.title.x = element_text(color="black", size=12, face="bold"),
@@ -1291,9 +1534,9 @@ LR_OS_SMOTE_Model_Predictions %>%
 
 ```
 
-###  1.5.5 Oversampling - Random Oversampling Examples  (OS_ROSE)
+###  1.5.7 Oversampling - Random Oversampling Examples  (OS_ROSE)
 
-```{r section_1.5.5, warning=FALSE, message=FALSE}
+```{r section_1.5.7, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
 ##################################
@@ -1399,11 +1642,11 @@ LR_OS_ROSE_Model_Predictions %>%
   geom_point(size=5) +
   geom_line(color="black") +
   xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
+  ylab("Estimated Rock Detection Probability") +
   labs(color = "Class") +
   scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
   scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_ROSE)") +
+  ggtitle("Estimated Rock Detection Probabilities Based on Classification Index : Logistic Regression (OS_ROSE)") +
   theme_bw() +
   theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
         axis.title.x = element_text(color="black", size=12, face="bold"),
@@ -1412,250 +1655,162 @@ LR_OS_ROSE_Model_Predictions %>%
 
 ```
 
-###  1.5.6 Undersampling - Near Miss Algorithm  (US_NM)
-
-```{r section_1.5.6, warning=FALSE, message=FALSE}
-##################################
-# Visualizing the imbalanced data set
-##################################
-ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
-  geom_point() +
-  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
-  geom_point(size=5) +
-  labs(title = "Without Undersampling - Near Miss Algorithm") +
-  theme_bw() +
-  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
-        axis.title.x = element_text(color="black", size=12, face="bold"),
-        axis.title.y = element_text(color="black", size=12, face="bold"),
-        legend.position="top")
-
-##################################
-# Implementing US_NEARMISS
-# Visualizing the undersampled data using US_NEARMISS
-##################################
-recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
-  step_nearmiss(Class, seed=123456789) %>%
-  prep() %>%
-  bake(new_data = NULL) %>%
-  ggplot(aes(V1, V11, color = Class)) +
-  geom_point() +
-  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
-  geom_point(size=5) +
-  labs(title = "With Undersampling - Near Miss Algorithm") +
-  theme_bw() +
-  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
-        axis.title.x = element_text(color="black", size=12, face="bold"),
-        axis.title.y = element_text(color="black", size=12, face="bold"),
-        legend.position="top")
-
-OS_NEARMISS <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
-  step_nearmiss(Class, seed=123456789) %>%
-  prep()
-
-PMA_PreModelling_Train_LR_OS_NEARMISS <- OS_NEARMISS %>%
-bake(new_data = NULL)
-
-(PMA_PreModelling_Train_LR_OS_NEARMISS <- as.data.frame(PMA_PreModelling_Train_LR_OS_NEARMISS))
-
-##################################
-# Verifying the class distribution
-# for the undersampled data using OS_NEARMISS
-##################################
-table(PMA_PreModelling_Train_LR_OS_NEARMISS$Class) 
-
-##################################
-# Formulating the structure of the
-# Logistic Regression model
-##################################
-LR_OS_NEARMISS_Model <- glm(Class ~ V1 + V11,
-                data = PMA_PreModelling_Train_LR_OS_NEARMISS,
-                family = binomial)
-
-##################################
-# Consolidating the model results
-##################################
-summary(LR_OS_NEARMISS_Model)
-
-LR_OS_NEARMISS_Model_Coef <- (as.data.frame(LR_OS_NEARMISS_Model$coefficients))
-LR_OS_NEARMISS_Model_Coef$Coef <- rownames(LR_OS_NEARMISS_Model_Coef)
-LR_OS_NEARMISS_Model_Coef$Model <- rep("LR_OS_NEARMISS",nrow(LR_OS_NEARMISS_Model_Coef))
-colnames(LR_OS_NEARMISS_Model_Coef) <- c("Estimates","Coefficients","Model")
-print(LR_OS_NEARMISS_Model_Coef, rownames=FALSE)
-
-##################################
-# Computing the model predictions
-##################################
-(LR_OS_NEARMISS_Model_Probabilities <- predict(LR_OS_NEARMISS_Model, 
-                              type = c("response")))
-
-##################################
-# Creating a classification index
-# based from the model predictions
-##################################
-(LR_OS_NEARMISS_Model_Indices <- predict(LR_OS_NEARMISS_Model, 
-                           type = c("link")))
-max(LR_OS_NEARMISS_Model_Indices)
-min(LR_OS_NEARMISS_Model_Indices)
-
-##################################
-# Consolidating the model probabilities
-# and classification index
-# based from the model predictions
-##################################
-LR_OS_NEARMISS_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_OS_NEARMISS)
-LR_OS_NEARMISS_Model_Predictions$LR_OS_NEARMISS_Prob <- LR_OS_NEARMISS_Model_Probabilities
-LR_OS_NEARMISS_Model_Predictions$LR_OS_NEARMISS_LP <- LR_OS_NEARMISS_Model_Indices
-LR_OS_NEARMISS_Model_Predictions$Class <- as.factor(LR_OS_NEARMISS_Model_Predictions$Class)
-LR_OS_NEARMISS_Model_Predictions$Label <- rep("LR_OS_NEARMISS",nrow(LR_OS_NEARMISS_Model_Predictions))
-
-##################################
-# Formulating the probability curve
-# using the consolidated model predictions
-##################################
-LR_OS_NEARMISS_Model_Predictions %>%
-  ggplot(aes(x = LR_OS_NEARMISS_LP ,
-             y = LR_OS_NEARMISS_Prob,
-             color = Class)) +
-  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
-  geom_point(size=5) +
-  geom_line(color="black") +
-  xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
-  labs(color = "Class") +
-  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
-  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_NEARMISS)") +
-  theme_bw() +
-  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
-        axis.title.x = element_text(color="black", size=12, face="bold"),
-        axis.title.y = element_text(color="black", size=12, face="bold"),
-        legend.position="top")
-```
-
-###  1.5.7 Undersampling - Tomek Links  (US_TL)
-
-```{r section_1.5.7, warning=FALSE, message=FALSE}
-##################################
-# Visualizing the imbalanced data set
-##################################
-ggplot(PMA_PreModelling_Train, aes(V1, V11, color = Class)) +
-  geom_point() +
-  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
-  geom_point(size=5) +
-  labs(title = "Without Undersampling - Tomek Links") +
-  theme_bw() +
-  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
-        axis.title.x = element_text(color="black", size=12, face="bold"),
-        axis.title.y = element_text(color="black", size=12, face="bold"),
-        legend.position="top")
-
-##################################
-# Implementing US_TOMEK
-# Visualizing the undersampled data using US_TOMEK
-##################################
-recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
-  step_tomek(Class, seed=123456789) %>%
-  prep() %>%
-  bake(new_data = NULL) %>%
-  ggplot(aes(V1, V11, color = Class)) +
-  geom_point() +
-  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
-  geom_point(size=5) +
-  labs(title = "With Undersampling - Tomek Links") +
-  theme_bw() +
-  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
-        axis.title.x = element_text(color="black", size=12, face="bold"),
-        axis.title.y = element_text(color="black", size=12, face="bold"),
-        legend.position="top")
-
-OS_TOMEK <- recipe(Class ~ V1 + V11, data = PMA_PreModelling_Train) %>%
-  step_tomek(Class, seed=123456789) %>%
-  prep()
-
-PMA_PreModelling_Train_LR_OS_TOMEK <- OS_TOMEK %>%
-bake(new_data = NULL)
-
-(PMA_PreModelling_Train_LR_OS_TOMEK <- as.data.frame(PMA_PreModelling_Train_LR_OS_TOMEK))
-
-##################################
-# Verifying the class distribution
-# for the undersampled data using OS_TOMEK
-##################################
-table(PMA_PreModelling_Train_LR_OS_TOMEK$Class) 
-
-##################################
-# Formulating the structure of the
-# Logistic Regression model
-##################################
-LR_OS_TOMEK_Model <- glm(Class ~ V1 + V11,
-                data = PMA_PreModelling_Train_LR_OS_TOMEK,
-                family = binomial)
-
-##################################
-# Consolidating the model results
-##################################
-summary(LR_OS_TOMEK_Model)
-
-LR_OS_TOMEK_Model_Coef <- (as.data.frame(LR_OS_TOMEK_Model$coefficients))
-LR_OS_TOMEK_Model_Coef$Coef <- rownames(LR_OS_TOMEK_Model_Coef)
-LR_OS_TOMEK_Model_Coef$Model <- rep("LR_OS_TOMEK",nrow(LR_OS_TOMEK_Model_Coef))
-colnames(LR_OS_TOMEK_Model_Coef) <- c("Estimates","Coefficients","Model")
-print(LR_OS_TOMEK_Model_Coef, rownames=FALSE)
-
-##################################
-# Computing the model predictions
-##################################
-(LR_OS_TOMEK_Model_Probabilities <- predict(LR_OS_TOMEK_Model, 
-                              type = c("response")))
-
-##################################
-# Creating a classification index
-# based from the model predictions
-##################################
-(LR_OS_TOMEK_Model_Indices <- predict(LR_OS_TOMEK_Model, 
-                           type = c("link")))
-max(LR_OS_TOMEK_Model_Indices)
-min(LR_OS_TOMEK_Model_Indices)
-
-##################################
-# Consolidating the model probabilities
-# and classification index
-# based from the model predictions
-##################################
-LR_OS_TOMEK_Model_Predictions <- as.data.frame(PMA_PreModelling_Train_LR_OS_TOMEK)
-LR_OS_TOMEK_Model_Predictions$LR_OS_TOMEK_Prob <- LR_OS_TOMEK_Model_Probabilities
-LR_OS_TOMEK_Model_Predictions$LR_OS_TOMEK_LP <- LR_OS_TOMEK_Model_Indices
-LR_OS_TOMEK_Model_Predictions$Class <- as.factor(LR_OS_TOMEK_Model_Predictions$Class)
-LR_OS_TOMEK_Model_Predictions$Label <- rep("LR_OS_TOMEK",nrow(LR_OS_TOMEK_Model_Predictions))
-
-##################################
-# Formulating the probability curve
-# using the consolidated model predictions
-##################################
-LR_OS_TOMEK_Model_Predictions %>%
-  ggplot(aes(x = LR_OS_TOMEK_LP ,
-             y = LR_OS_TOMEK_Prob,
-             color = Class)) +
-  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
-  geom_point(size=5) +
-  geom_line(color="black") +
-  xlab("Sonar Object Classification Index (Logit Values)") +
-  ylab("Estimated Rock Object Detection Probability") +
-  labs(color = "Class") +
-  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
-  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
-  ggtitle("Estimated Rock Object Detection Probabilities Based on Classification Index : Logistic Regression (OS_TOMEK)") +
-  theme_bw() +
-  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
-        axis.title.x = element_text(color="black", size=12, face="bold"),
-        axis.title.y = element_text(color="black", size=12, face="bold"),
-        legend.position="top")
-
-```
 
 ## 1.6 Evaluation Summary
 
 ```{r section_1.6, warning=FALSE, message=FALSE}
+
+##################################
+# Replotting the logistic curves
+##################################
+LR_LogisticCurvePlot <- LR_Model_Predictions %>%
+  ggplot(aes(x = LR_LP ,
+             y = LR_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_US_NEARMISS_LogisticCurvePlot <- LR_US_NEARMISS_Model_Predictions %>%
+  ggplot(aes(x = LR_US_NEARMISS_LP ,
+             y = LR_US_NEARMISS_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_US_TOMEK_LogisticCurvePlot <- LR_US_TOMEK_Model_Predictions %>%
+  ggplot(aes(x = LR_US_TOMEK_LP ,
+             y = LR_US_TOMEK_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_OS_ADASYN_LogisticCurvePlot <-  LR_OS_ADASYN_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_ADASYN_LP ,
+             y = LR_OS_ADASYN_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_OS_BSMOTE_LogisticCurvePlot <-  LR_OS_BSMOTE_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_BSMOTE_LP ,
+             y = LR_OS_BSMOTE_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_OS_SMOTE_LogisticCurvePlot <-  LR_OS_SMOTE_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_SMOTE_LP ,
+             y = LR_OS_SMOTE_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+LR_OS_ROSE_LogisticCurvePlot <-  LR_OS_ROSE_Model_Predictions %>%
+  ggplot(aes(x = LR_OS_ROSE_LP ,
+             y = LR_OS_ROSE_Prob,
+             color = Class)) +
+  scale_colour_manual(values=c("#1846BA55","#B8000055")) +
+  geom_point(size=5) +
+  geom_line(color="black") +
+  xlab("Sonar Object Classification Index (Logit Values)") +
+  ylab("Estimated Rock Detection Probability") +
+  labs(color = "Class") +
+  scale_x_continuous( limits=c(-10,5), breaks=seq(-10,5,by=1)) +
+  scale_y_continuous( limits=c(0,1), breaks=seq(0,1,by=0.1),labels = scales::percent) +
+  facet_grid(. ~ Label) +
+  theme_bw() +
+  theme(plot.title = element_text(color="black", size=14, face="bold", hjust=0.50),
+        axis.title.x = element_text(color="black", size=10, face="bold"),
+        axis.title.y = element_text(color="black", size=10, face="bold"),
+        legend.position="top")
+
+RLR_LogisticCurvePlot <- ggarrange(LR_LogisticCurvePlot,
+                                   LR_US_NEARMISS_LogisticCurvePlot,
+                                   LR_US_TOMEK_LogisticCurvePlot,
+                                   LR_OS_ADASYN_LogisticCurvePlot,
+                                   LR_OS_BSMOTE_LogisticCurvePlot,
+                                   LR_OS_SMOTE_LogisticCurvePlot,
+                                   LR_OS_ROSE_LogisticCurvePlot,
+                                   ncol=3, nrow=3)
+
+annotate_figure(RLR_LogisticCurvePlot,
+                top = text_grob("Estimated Rock Detection Probabilities Based on Classification Index", 
+                                color = "black", 
+                                face = "bold", 
+                                size = 14))
+
 ```
 
 # **2. References**
