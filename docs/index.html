@@ -1995,12 +1995,13 @@ Imbalance using Logistic Regression</h2>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the train set</span></span>
 <span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
 <span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR <span class="ot">&lt;-</span> PMA_PreModelling_Train</span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co"># for the original data</span></span>
-<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR<span class="sc">$</span>Class) </span></code></pre></div>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR))</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co"># for the original data</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##   M   R 
 ## 111  25</code></pre>
@@ -2284,11 +2285,13 @@ Imbalance using Logistic Regression</h2>
 ## 48 -0.186674974 -1.39954451     R
 ## 49 -0.008605128 -1.57143555     R
 ## 50 -1.348878827 -0.41384379     R</code></pre>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the undersampled data using US_NEARMISS</span></span>
-<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_US_NEARMISS<span class="sc">$</span>Class) </span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR_US_NEARMISS<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR_US_NEARMISS&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR_US_NEARMISS))</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for the undersampled data using US_NEARMISS</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_US_NEARMISS<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##  M  R 
 ## 25 25</code></pre>
@@ -2584,11 +2587,13 @@ Imbalance using Logistic Regression</h2>
 ## 116 -2.434915803 -1.57286451     R
 ## 117 -1.138280881 -0.92728240     R
 ## 118 -0.008605128 -1.57143555     R</code></pre>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the undersampled data using US_TOMEK</span></span>
-<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_US_TOMEK<span class="sc">$</span>Class) </span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR_US_TOMEK<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR_US_TOMEK&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR_US_TOMEK))</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for the undersampled data using US_TOMEK</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_US_TOMEK<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##   M   R 
 ## 102  16</code></pre>
@@ -3026,11 +3031,13 @@ Imbalance using Logistic Regression</h2>
 ## 220 -1.190222435 -0.536093069     R
 ## 221 -1.196659723 -0.784954555     R
 ## 222 -1.253287340 -0.646896207     R</code></pre>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_ADASYN</span></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_ADASYN<span class="sc">$</span>Class) </span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR_OS_ADASYN<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR_OS_ADASYN&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR_OS_ADASYN))</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_ADASYN</span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_ADASYN<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##   M   R 
 ## 111 111</code></pre>
@@ -3533,11 +3540,13 @@ Technique (OS_BSMOTE)</h3>
 ## 220 -0.284049367 -1.19059300     R
 ## 221 -0.174278835 -1.58372942     R
 ## 222 -0.277331844 -1.02794573     R</code></pre>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_BSMOTE</span></span>
-<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb140-5"><a href="#cb140-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_BSMOTE<span class="sc">$</span>Class) </span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR_OS_BSMOTE<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR_OS_BSMOTE&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR_OS_BSMOTE))</span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb140-5"><a href="#cb140-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_BSMOTE</span></span>
+<span id="cb140-6"><a href="#cb140-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb140-7"><a href="#cb140-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_BSMOTE<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##   M   R 
 ## 111 111</code></pre>
@@ -4066,11 +4075,13 @@ Technique (OS_BSMOTE)</h3>
 ## 220 -0.896995634  0.313447296     R
 ## 221 -1.278607918 -0.418880974     R
 ## 222 -1.404025395 -1.073598925     R</code></pre>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb159-3"><a href="#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_SMOTE</span></span>
-<span id="cb159-4"><a href="#cb159-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb159-5"><a href="#cb159-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_SMOTE<span class="sc">$</span>Class) </span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR_OS_SMOTE<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR_OS_SMOTE&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR_OS_SMOTE))</span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb159-3"><a href="#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb159-4"><a href="#cb159-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb159-5"><a href="#cb159-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_SMOTE</span></span>
+<span id="cb159-6"><a href="#cb159-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb159-7"><a href="#cb159-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_SMOTE<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##   M   R 
 ## 111 111</code></pre>
@@ -4582,11 +4593,13 @@ Technique (OS_BSMOTE)</h3>
 ## 220 -1.010449867 -0.143822342     R
 ## 221 -0.443012681 -2.279874936     R
 ## 222 -0.918668643 -1.722236931     R</code></pre>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb178-2"><a href="#cb178-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
-<span id="cb178-3"><a href="#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_ROSE</span></span>
-<span id="cb178-4"><a href="#cb178-4" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb178-5"><a href="#cb178-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_ROSE<span class="sc">$</span>Class) </span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-hidden="true" tabindex="-1"></a>PMA_PreModelling_Train_LR_OS_ROSE<span class="sc">$</span>Label <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;LR_OS_ROSE&quot;</span>,<span class="fu">nrow</span>(PMA_PreModelling_Train_LR_OS_ROSE))</span>
+<span id="cb178-2"><a href="#cb178-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-3"><a href="#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb178-4"><a href="#cb178-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying the class distribution</span></span>
+<span id="cb178-5"><a href="#cb178-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for the oversampled data using OS_ROSE</span></span>
+<span id="cb178-6"><a href="#cb178-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb178-7"><a href="#cb178-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(PMA_PreModelling_Train_LR_OS_ROSE<span class="sc">$</span>Class) </span></code></pre></div>
 <pre><code>## 
 ##   M   R 
 ## 110 112</code></pre>

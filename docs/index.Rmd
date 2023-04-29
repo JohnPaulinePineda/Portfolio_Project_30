@@ -852,6 +852,7 @@ featurePlot(x = EDA.Predictors.Numeric,
 # for the train set
 ##################################
 PMA_PreModelling_Train_LR <- PMA_PreModelling_Train
+PMA_PreModelling_Train_LR$Label <- rep("LR",nrow(PMA_PreModelling_Train_LR))
 
 ##################################
 # Verifying the class distribution
@@ -974,6 +975,8 @@ bake(new_data = NULL)
 
 (PMA_PreModelling_Train_LR_US_NEARMISS <- as.data.frame(PMA_PreModelling_Train_LR_US_NEARMISS))
 
+PMA_PreModelling_Train_LR_US_NEARMISS$Label <- rep("LR_US_NEARMISS",nrow(PMA_PreModelling_Train_LR_US_NEARMISS))
+
 ##################################
 # Verifying the class distribution
 # for the undersampled data using US_NEARMISS
@@ -1094,6 +1097,8 @@ PMA_PreModelling_Train_LR_US_TOMEK <- US_TOMEK %>%
 bake(new_data = NULL)
 
 (PMA_PreModelling_Train_LR_US_TOMEK <- as.data.frame(PMA_PreModelling_Train_LR_US_TOMEK))
+
+PMA_PreModelling_Train_LR_US_TOMEK$Label <- rep("LR_US_TOMEK",nrow(PMA_PreModelling_Train_LR_US_TOMEK))
 
 ##################################
 # Verifying the class distribution
@@ -1216,6 +1221,8 @@ bake(new_data = NULL)
 
 (PMA_PreModelling_Train_LR_OS_ADASYN <- as.data.frame(PMA_PreModelling_Train_LR_OS_ADASYN))
 
+PMA_PreModelling_Train_LR_OS_ADASYN$Label <- rep("LR_OS_ADASYN",nrow(PMA_PreModelling_Train_LR_OS_ADASYN))
+
 ##################################
 # Verifying the class distribution
 # for the oversampled data using OS_ADASYN
@@ -1337,6 +1344,8 @@ bake(new_data = NULL)
 
 (PMA_PreModelling_Train_LR_OS_BSMOTE <- as.data.frame(PMA_PreModelling_Train_LR_OS_BSMOTE))
 
+PMA_PreModelling_Train_LR_OS_BSMOTE$Label <- rep("LR_OS_BSMOTE",nrow(PMA_PreModelling_Train_LR_OS_BSMOTE))
+
 ##################################
 # Verifying the class distribution
 # for the oversampled data using OS_BSMOTE
@@ -1457,6 +1466,7 @@ PMA_PreModelling_Train_LR_OS_SMOTE <- OS_SMOTE %>%
 bake(new_data = NULL)
 
 (PMA_PreModelling_Train_LR_OS_SMOTE <- as.data.frame(PMA_PreModelling_Train_LR_OS_SMOTE))
+PMA_PreModelling_Train_LR_OS_SMOTE$Label <- rep("LR_OS_SMOTE",nrow(PMA_PreModelling_Train_LR_OS_SMOTE))
 
 ##################################
 # Verifying the class distribution
@@ -1578,6 +1588,7 @@ PMA_PreModelling_Train_LR_OS_ROSE <- OS_ROSE %>%
 bake(new_data = NULL)
 
 (PMA_PreModelling_Train_LR_OS_ROSE <- as.data.frame(PMA_PreModelling_Train_LR_OS_ROSE))
+PMA_PreModelling_Train_LR_OS_ROSE$Label <- rep("LR_OS_ROSE",nrow(PMA_PreModelling_Train_LR_OS_ROSE))
 
 ##################################
 # Verifying the class distribution
