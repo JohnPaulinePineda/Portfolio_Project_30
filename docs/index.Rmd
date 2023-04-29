@@ -2326,6 +2326,7 @@ annotate_figure(RLR_LogisticCurvePlot,
 | **[Article]** [Best Ways To Handle Imbalanced Data in Machine Learning](https://dataaspirant.com/handle-imbalanced-data-machine-learning/) by Jaiganesh Nagidi
 | **[Article]** [Handling Imbalanced Data for Classification](https://www.geeksforgeeks.org/handling-imbalanced-data-for-classification/) by Geeks For Geeks Team
 | **[Article]** [Random Oversampling and Undersampling for Imbalanced Classification](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/#:~:text=Random%20undersampling%20involves%20randomly%20selecting%20examples%20from%20the,45%2C%20Imbalanced%20Learning%3A%20Foundations%2C%20Algorithms%2C%20and%20Applications%2C%202013) by Jason Brownlee
+| **[Publication]** [The Origins of Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) by JS Cramer (Econometrics eJournal)
 | **[Publication]** [KNN Approach to Unbalanced Data Distributions: A Case Study Involving Information Extraction](https://dl.acm.org/doi/10.1145/1007730.1007735) by Inderjeet Mani and J Zhang (Proceedings of Workshop on Learning from Imbalanced Datasets)
 | **[Publication]** [Two Modifications of CNN](https://ieeexplore.ieee.org/document/4309452) by Ivan Tomek (IEEE Transactions on Systems, Man, and Cybernetics)
 | **[Publication]** [ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning](https://ieeexplore.ieee.org/document/4633969) by Haibo He, Yang Bai, Edwardo Garcia and Shutao Li (IEEE World Congress on Computational Intelligence)
