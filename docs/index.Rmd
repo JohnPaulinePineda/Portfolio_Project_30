@@ -1820,7 +1820,7 @@ LR_OS_BSMOTE_Model_Predictions %>%
 |
 | **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
 |
-| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the uniques values and number of instances was relatively high, a significant overlap between both classes is observed.
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes is observed.
 |
 ```{r section_1.5.8, warning=FALSE, message=FALSE}
 ##################################
@@ -1945,7 +1945,23 @@ LR_OS_SMOTE_Model_Predictions %>%
 ```
 
 ###  1.5.9 Oversampling - Random Oversampling Examples  (LR_OS_ROSE)
-
+|
+| [Random Oversampling Examples](https://link.springer.com/article/10.1007/s10618-012-0295-5) generates synthetic data by enlarging the feature space of minority and majority class instances. The algorithm draws new examples from a conditional kernel density estimate of the two classes. The kernel is a normal product function centered at each of the instances with diagonal covariance matrix defined with the width of the neighborhood which is the asymptotically optimal smoothing matrix under the assumption of multivariate normality. 
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The class ratio of the oversampled data was noted at 50:50 with majority of the added instances being unique values for the minority class.
+|      **[B.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 110 instances
+|      **[B.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 112 instances
+|
+| **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes is observed.
+|
 ```{r section_1.5.9, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
