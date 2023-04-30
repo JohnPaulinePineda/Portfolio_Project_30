@@ -1379,7 +1379,23 @@ LR_US_NEARMISS_Model_Predictions %>%
 ```
 
 ###  1.5.5 Undersampling - Tomek Links  (LR_US_TOMEK)
-
+|
+| [Tomek Links](https://ieeexplore.ieee.org/document/4309452) remove majority class instances of tomek links referring to a pair of points from different classes and are each others nearest neighbors
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The class ratio of the undersampled data was noted at 85:15 which performed worse than the original data.
+|      **[B.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 102 instances
+|      **[B.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 16 instances
+|
+| **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a skewed logistic profile with a longer tail for the predicted points belonging to the majority class.
+|
 ```{r section_1.5.5, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1506,7 +1522,23 @@ LR_US_TOMEK_Model_Predictions %>%
 ```
 
 ###  1.5.6 Oversampling - Adaptive Synthetic Algorithm (LR_OS_ADASYN)
-
+|
+| [Adaptive Synthetic Algorithm](https://ieeexplore.ieee.org/document/4633969) uses a weighted distribution for different minority class instances according to their level of difficulty in learning. Synthetic data is generated for minority class instances that are harder to learn compared to those minority instances that are easier to learn. The algorithm improves learning with respect to the data distributions by reducing the bias introduced by the class imbalance and adaptively shifting the classification decision boundary toward the difficult examples.
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The class ratio of the oversampled data was noted at 50:50 with majority of the added instances being unique values for the minority class.
+|      **[B.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[B.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 111 instances
+|
+| **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the uniques values and number of instances was relatively high, the added instances tended to cluster at center of the data distribution.
+|
 ```{r section_1.5.6, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
