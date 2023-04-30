@@ -807,9 +807,7 @@ dim(PMA_PreModelling_Train)
 |
 | Exploratory data analysis:
 |
-| **[A]** Numeric variables which demonstrated a differential relationships with the <span style="color: #FF0000">Class</span> response variable include:
-|      **[A.1]** <span style="color: #FF0000">V1</span> variable (numeric)
-|      **[A.2]** <span style="color: #FF0000">V11</span> variable (numeric)
+| **[A]** Both <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> numeric variables demonstrated differential relationships with the <span style="color: #FF0000">Class</span> response variable.
 |
 ```{r section_1.4, warning=FALSE, message=FALSE}
 ##################################
