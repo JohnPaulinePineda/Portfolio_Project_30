@@ -845,7 +845,17 @@ featurePlot(x = EDA.Predictors.Numeric,
 ## 1.5 Oversampling and Undersampling Algorithms Applied for Class Imbalance using Logistic Regression
 
 ###  1.5.1 Original Data (LR)
-
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[C]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a skewed logistic profile with a longer tail for the predicted points belonging to the majority class.
+|
 ```{r section_1.5.1, warning=FALSE, message=FALSE}
 ##################################
 # Creating a local object
