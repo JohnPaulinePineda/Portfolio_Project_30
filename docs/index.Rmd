@@ -1675,7 +1675,7 @@ Oversampling is only performed within minority class instances in the danger cat
 |
 | **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
 |
-| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Minimal overlap between both classes is observed driving better differentiation although a minimal skew is still present due to a longer tail for the predicted points belonging to the majority class.
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Minimal overlap between both classes was observed driving better differentiation although a minimal skew was still present due to a longer tail for the predicted points belonging to the majority class.
 |
 ```{r section_1.5.7, warning=FALSE, message=FALSE}
 ##################################
@@ -1818,7 +1818,7 @@ LR_OS_BSMOTE_Model_Predictions %>%
 |
 | **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
 |
-| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes is observed.
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes was observed.
 |
 ```{r section_1.5.8, warning=FALSE, message=FALSE}
 ##################################
@@ -1958,7 +1958,7 @@ LR_OS_SMOTE_Model_Predictions %>%
 |
 | **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
 |
-| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes is observed.
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes was observed.
 |
 ```{r section_1.5.9, warning=FALSE, message=FALSE}
 ##################################
@@ -2084,7 +2084,18 @@ LR_OS_ROSE_Model_Predictions %>%
 
 
 ## 1.6 Evaluation Summary
-
+|
+| Undersampling and oversampling algorithm comparison:
+|
+| **[A]** Using the logistic regression model, the algorithm which demonstrated relatively better performance among other undersampling methods is the following:
+|      **[A.1]** LR_US_NEARMISS: Undersampling - Near Miss Algorithm
+|             **[A.1.1]** A sufficiently balanced logistic profile for the predicted points from both the majority and minority classes was achieved.
+|             **[A.1.2]** As an undersampling method applied on a relatively small-sized original data set, the distribution of instances was relatively sparse.
+| **[B]** Using the logistic regression model, the algorithm which demonstrated relatively better performance among other oversampling methods is the following:
+|      **[B.1]** LR_OS_BSMOTE: Oversampling - Borderline Synthetic Minority Oversampling Technique
+|             **[B.1.1]** A sufficiently balanced logistic profile for the predicted points from both the majority and minority classes was achieved.
+|             **[B.1.2]** Minimal overlap between both classes was obtained although a minimal skew was still observed due to a longer tail for the predicted points belonging to the majority class.
+|
 ```{r section_1.6, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
