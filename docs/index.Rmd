@@ -956,7 +956,23 @@ LR_Model_Predictions %>%
 ```
 
 ###  1.5.2 Undersampling - Random Downsampling  (LR_US_DOWNSAMPLE)
-
+|
+| [Random Downsampling](https://dl.acm.org/doi/10.1145/1007730.1007735) performs a random removal of rows for the majority class instances to make the occurrence with the minority class equal.
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The class ratio of the undersampled data using Downsampling was noted at 50:50, although the number of instances was significantly decreased by 63%.
+|      **[B.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 25 instances
+|      **[B.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[C]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes, although the distribution of instances was relatively sparse.
+|
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
