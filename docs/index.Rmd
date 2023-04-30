@@ -1537,7 +1537,7 @@ LR_US_TOMEK_Model_Predictions %>%
 |
 | **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
 |
-| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the uniques values and number of instances was relatively high, the added instances tended to cluster at center of the data distribution.
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the uniques values and number of instances was relatively high, the added instances tended to cluster at the center of the data distribution.
 |
 ```{r section_1.5.6, warning=FALSE, message=FALSE}
 ##################################
@@ -1661,7 +1661,24 @@ LR_OS_ADASYN_Model_Predictions %>%
 ```
 
 ###  1.5.7 Oversampling - Borderline Synthetic Minority Oversampling Technique  (LR_OS_BSMOTE)
-
+|
+| [Borderline Synthetic Minority Oversampling Technique](https://link.springer.com/chapter/10.1007/11538059_91) generates new instances of the minority class using nearest neighbors of these cases in the border region between classes. The algorithm initially classifies instances of the minority class into the noise, safe and danger categories. If the surrounding nearest neighbors are from the majority class, instances are denoted as noise data which will have have adverse effects on the data distribution and are thus not considered using synthetic data generation. Instances with more than half of the surrounding neighbors are from the same minority class are denoted as safe.
+Oversampling is only performed within minority class instances in the danger category which covers those with more than half of the nearest neighbors from the majority class.
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The class ratio of the oversampled data was noted at 50:50 with majority of the added instances being unique values for the minority class.
+|      **[B.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[B.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 111 instances
+|
+| **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Minimal overlap between both classes is observed driving better differentiation although a minimal skew is still present due to a longer tail for the predicted points belonging to the majority class.
+|
 ```{r section_1.5.7, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
