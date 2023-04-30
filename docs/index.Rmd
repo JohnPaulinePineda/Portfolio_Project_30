@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |
 | This document presents a non-exhaustive list of oversampling and undersampling algorithms applied for severe class imbalance using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.
 |
-| Oversampling and undersampling algorithms address imbalanced classification problems by changing the data set used for model training through non-random resampling to achieve a more reasonably balanced data between the majority and minority classes. In oversampling, new instances are created from the minor class instead of merely creating copies, by selecting two or more similar instances (using a distance measure) and perturbing an instance one attribute at a time by a random amount within the difference to the neighboring instances. In undersampling, a subset of instances from the majority class is removed based on relationships between nearest neighbors by having the minimum distance in the feature space with other instances belonging to the minority classes. The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**caret**</mark>, <mark style="background-color: #CCECFF">**themis**</mark> and <mark style="background-color: #CCECFF">**ROSE**</mark> packages attempt to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class.
+| Oversampling and undersampling algorithms address imbalanced classification problems by augmenting the data set used for model training based on its inherent characteristics to achieve a more reasonably balanced distribution between the majority and minority classes. In oversampling, new instances are created from the minor class instead of merely creating copies, by selecting two or more similar instances (using a distance measure) and perturbing an instance one attribute at a time by a random amount within the difference to the neighboring instances. In undersampling, a subset of instances from the majority class is removed based on relationships between nearest neighbors by having the minimum distance in the feature space with other instances belonging to the minority classes. The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**caret**</mark>, <mark style="background-color: #CCECFF">**themis**</mark> and <mark style="background-color: #CCECFF">**ROSE**</mark> packages attempt to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class.
 |
 ##  1.1 Sample Data
 |
@@ -1805,7 +1805,23 @@ LR_OS_BSMOTE_Model_Predictions %>%
 ```
 
 ###  1.5.8 Oversampling - Synthetic Minority Oversampling Technique  (LR_OS_SMOTE)
-
+|
+| [Synthetic Minority Oversampling Technique](https://dl.acm.org/doi/10.5555/1622407.1622416) generates new minority instances between existing instances. The new instances created are not just the copy of existing minority cases, instead the algorithm takes sample of feature space for each target class and its neighbors and then generates new instances that combine the features of the target cases with features of its neighbors.
+|
+| [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
+|
+| **[A]** The class ratio of the original data was noted at 80:20.
+|      **[A.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[A.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 25 instances
+|
+| **[B]** The class ratio of the oversampled data was noted at 50:50 with majority of the added instances being unique values for the minority class.
+|      **[B.1]** Majority Class = <span style="color: #FF0000">Class=M</span> with 111 instances
+|      **[B.2]** Minority Class = <span style="color: #FF0000">Class=R</span> with 111 instances
+|
+| **[C]** The logistic regression model from the <mark style="background-color: #CCECFF">**stats**</mark> package was implemented. The <span style="color: #FF0000">Class</span> response was regressed against the <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> predictors.
+|
+| **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the uniques values and number of instances was relatively high, a significant overlap between both classes is observed.
+|
 ```{r section_1.5.8, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
