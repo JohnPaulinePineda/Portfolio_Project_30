@@ -2089,11 +2089,11 @@ LR_OS_ROSE_Model_Predictions %>%
 |
 | **[A]** The option to apply either an undersampling and oversampling method to augment imbalanced data prior to model training is predominantly driven by the quality and characteristics of the data set at hand. For large-sized data sets, undersampling methods may still prove effective in achieving balanced class distributions while maintaining a sufficient number of instances and reasonable computation complexity. For small- to medium-sized data sets, oversampling methods may help to maximize data augmentation while avoiding data sparsity in the resulting data update. The effectiveness of certain algorithms may vary depending on how discriminative the predictors are in distinguishing between classes.
 | **[B]** Using the logistic regression model, the algorithm which demonstrated relatively better performance among other undersampling methods is the following:
-|      **[B.1]** LR_US_NEARMISS: Undersampling - Near Miss Algorithm
+|      **[B.1]** **LR_US_NEARMISS: Undersampling - Near Miss Algorithm**
 |             **[B.1.1]** A sufficiently balanced logistic profile for the predicted points from both the majority and minority classes was achieved.
 |             **[B.1.2]** As an undersampling method applied on a relatively small-sized original data set, the distribution of instances was relatively sparse.
 | **[C]** Using the logistic regression model, the algorithm which demonstrated relatively better performance among other oversampling methods is the following:
-|      **[C.1]** LR_OS_BSMOTE: Oversampling - Borderline Synthetic Minority Oversampling Technique
+|      **[C.1]** **LR_OS_BSMOTE: Oversampling - Borderline Synthetic Minority Oversampling Technique**
 |             **[C.1.1]** A sufficiently balanced logistic profile for the predicted points from both the majority and minority classes was achieved.
 |             **[C.1.2]** Minimal overlap between both classes was obtained although a minimal skew was still observed due to a longer tail for the predicted points belonging to the majority class.
 |
