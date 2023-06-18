@@ -36,6 +36,9 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |      **[B.2]** 2/3 predictors = All remaining variables (2/2 numeric)
 |     
 | 
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1, warning=FALSE, message=FALSE}
 ##################################
 # Loading R libraries
@@ -112,6 +115,8 @@ PDA <- Sonar_Train
 )
 ```
 
+</details>
+
 ##  1.2 Data Quality Assessment
 |
 | Data quality assessment:
@@ -124,6 +129,10 @@ PDA <- Sonar_Train
 |
 | **[D]** No high skewness noted for any variable with Skewness>3 or Skewness<(-3).
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -341,6 +350,8 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 
 ```
 
+</details>
+
 ##  1.3 Data Preprocessing
 
 ###  1.3.1 Outlier
@@ -351,6 +362,10 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 |      **[A.1]** <span style="color: #FF0000">V1</span> variable (8 outliers detected)
 |      **[A.2]** <span style="color: #FF0000">V11</span> variable (5 outliers detected)
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -401,6 +416,9 @@ print(paste0(NumericPredictorWithOutlierCount, " numeric variable(s) were noted 
 dim(DPA.Predictors.Numeric)
 
 ```
+
+</details>
+
 ###  1.3.2 Zero and Near-Zero Variance
 |
 | Zero and near-zero variance data assessment:
@@ -409,6 +427,10 @@ dim(DPA.Predictors.Numeric)
 |
 | **[B]** No low variance noted for any variables using a preprocessing summary from the <mark style="background-color: #CCECFF">**caret**</mark> package. The <span style="color: #0000FF">nearZeroVar</span> method using both the <span style="color: #0000FF">freqCut</span> and <span style="color: #0000FF">uniqueCut</span> criteria set at 95/5 and 10, respectively, were applied on the dataset.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.2, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -476,12 +498,18 @@ if ((nrow(DPA_LowVariance[DPA_LowVariance$nzv,]))==0){
 
 ```
 
+</details>
+
 ###  1.3.3 Collinearity
 |
 | High collinearity data assessment:
 |
 | **[A]** No high correlation > 95% were noted for any variable as confirmed using the preprocessing summaries from the <mark style="background-color: #CCECFF">**caret**</mark> and <mark style="background-color: #CCECFF">**lares**</mark> packages.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.3, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -583,12 +611,18 @@ if (DPA_HighlyCorrelatedCount > 0) {
 
 ```
 
+</details>
+
 ###  1.3.4 Linear Dependencies
 |
 | Linear dependency data assessment:
 |
 | **[A]** No linear dependencies noted for any subset of variables using the preprocessing summary from the <mark style="background-color: #CCECFF">**caret**</mark> package applying the <span style="color: #0000FF">findLinearCombos</span> method which utilizes the QR decomposition of a matrix to enumerate sets of linear combinations (if they exist). 
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.4, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -675,12 +709,18 @@ if (DPA_LinearlyDependentCount > 0) {
 }
 ```
 
+</details>
+
 ###  1.3.5 Shape Transformation
 |
 | Data transformation assessment:
 |
 | **[A]** A number of numeric variables in the dataset were observed to be right-skewed which required shape transformation for data distribution stability. Considering that all numeric variables were strictly positive values, the <span style="color: #0000FF">BoxCox</span> method from the <mark style="background-color: #CCECFF">**caret**</mark> package was used to transform their distributional shapes.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.5, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -715,12 +755,18 @@ dim(DPA_BoxCoxTransformed)
 
 ```
 
+</details>
+
 ###  1.3.6 Centering and Scaling
 |
 | Centering and scaling data assessment:
 |
 | **[A]** To maintain numerical stability during modelling, centering and scaling transformations were applied on the transformed numeric variables. The <span style="color: #0000FF">center</span> method from the <mark style="background-color: #CCECFF">**caret**</mark> package was implemented which subtracts the average value of a numeric variable to all the values. As a result of centering, the variables had zero mean values. In addition, the <span style="color: #0000FF">scale</span> method, also from the <mark style="background-color: #CCECFF">**caret**</mark> package, was applied which performs a center transformation with each value of the variable divided by its standard deviation. Scaling the data coerced the values to have a common standard deviation of one.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.6, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -761,6 +807,8 @@ dim(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed)
 
 ```
 
+</details>
+
 ###  1.3.7 Pre-Processed Dataset
 |
 | Preliminary dataset assessment:
@@ -780,6 +828,10 @@ dim(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed)
 |      **[C.4]** No predictors removed due to high correlation
 |      **[C.5]** No predictors removed due to linear dependencies
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.3.7, warning=FALSE, message=FALSE}
 ##################################
 # Creating the pre-modelling
@@ -803,12 +855,18 @@ dim(PMA_PreModelling_Train)
 
 ```
 
+</details>
+
 ## 1.4 Data Exploration
 |
 | Exploratory data analysis:
 |
 | **[A]** Both <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> numeric variables demonstrated differential relationships with the <span style="color: #FF0000">Class</span> response variable.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.4, warning=FALSE, message=FALSE}
 ##################################
 # Loading dataset
@@ -840,6 +898,8 @@ featurePlot(x = EDA.Predictors.Numeric,
 
 ```
 
+</details>
+
 ## 1.5 Oversampling and Undersampling Algorithms Applied for Class Imbalance using Logistic Regression
 
 ###  1.5.1 Original Data (LR)
@@ -854,6 +914,10 @@ featurePlot(x = EDA.Predictors.Numeric,
 |
 | **[C]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a skewed logistic profile with a longer tail for the predicted points belonging to the majority class.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.1, warning=FALSE, message=FALSE}
 ##################################
 # Creating a local object
@@ -953,6 +1017,8 @@ LR_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.2 Undersampling - Random Downsampling  (LR_US_DOWNSAMPLE)
 |
 | [Random Downsampling](https://dl.acm.org/doi/10.1145/1007730.1007735) performs a random removal of rows for the majority class instances to make the occurrence of levels with the minority class equal.
@@ -971,6 +1037,10 @@ LR_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes, although the distribution of instances was relatively sparse.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.2, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1094,6 +1164,8 @@ LR_US_DOWNSAMPLE_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.3 Oversampling - Random Upsampling  (LR_US_UPSAMPLE)
 |
 | [Random Upsampling](https://dl.acm.org/doi/10.1145/1007730.1007735) performs a random replication of rows for the minority class instances to make the occurrence of levels with the majority class equal.
@@ -1112,6 +1184,10 @@ LR_US_DOWNSAMPLE_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes, although the ratio of the uniques values and number of instances was relatively low.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.3, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1235,6 +1311,8 @@ LR_OS_UPSAMPLE_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.4 Undersampling - Near Miss Algorithm  (LR_US_NEARMISS)
 |
 | [Near Miss Algorithm](https://www.academia.edu/12815658/knn_approach_to_unbalanced_data_distributions_A_case_study_involving_information_extraction) removes majority class instances by undersampling points in the majority class which have the smallest mean distance to the defined nearest points in the minority class and based on their distance to other points in the same class. 
@@ -1253,6 +1331,10 @@ LR_OS_UPSAMPLE_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes, although the distribution of instances was relatively sparse.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.4, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1376,6 +1458,8 @@ LR_US_NEARMISS_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.5 Undersampling - Tomek Links  (LR_US_TOMEK)
 |
 | [Tomek Links](https://ieeexplore.ieee.org/document/4309452) remove majority class instances of tomek links referring to a pair of points from different classes and are each others nearest neighbors
@@ -1394,6 +1478,10 @@ LR_US_NEARMISS_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a skewed logistic profile with a longer tail for the predicted points belonging to the majority class.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.5, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1519,6 +1607,8 @@ LR_US_TOMEK_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.6 Oversampling - Adaptive Synthetic Algorithm (LR_OS_ADASYN)
 |
 | [Adaptive Synthetic Algorithm](https://ieeexplore.ieee.org/document/4633969) uses a weighted distribution for different minority class instances according to their level of difficulty in learning. Synthetic data is generated for minority class instances that are harder to learn compared to those minority instances that are easier to learn. The algorithm improves learning with respect to the data distributions by reducing the bias introduced by the class imbalance and adaptively shifting the classification decision boundary toward the difficult examples.
@@ -1537,6 +1627,10 @@ LR_US_TOMEK_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the uniques values and number of instances was relatively high, the added instances tended to cluster at the center of the data distribution.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.6, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1658,10 +1752,11 @@ LR_OS_ADASYN_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.7 Oversampling - Borderline Synthetic Minority Oversampling Technique  (LR_OS_BSMOTE)
 |
-| [Borderline Synthetic Minority Oversampling Technique](https://link.springer.com/chapter/10.1007/11538059_91) generates new instances of the minority class using nearest neighbors of these cases in the border region between classes. The algorithm initially classifies instances of the minority class into the noise, safe and danger categories. If the surrounding nearest neighbors are from the majority class, instances are denoted as noise data which will have have adverse effects on the data distribution and are thus not considered using synthetic data generation. Instances with more than half of the surrounding neighbors are from the same minority class are denoted as safe.
-Oversampling is only performed within minority class instances in the danger category which covers those with more than half of the nearest neighbors from the majority class.
+| [Borderline Synthetic Minority Oversampling Technique](https://link.springer.com/chapter/10.1007/11538059_91) generates new instances of the minority class using nearest neighbors of these cases in the border region between classes. The algorithm initially classifies instances of the minority class into the noise, safe and danger categories. If the surrounding nearest neighbors are from the majority class, instances are denoted as noise data which will have have adverse effects on the data distribution and are thus not considered using synthetic data generation. Instances with more than half of the surrounding neighbors are from the same minority class are denoted as safe. Oversampling is only performed within minority class instances in the danger category which covers those with more than half of the nearest neighbors from the majority class.
 |
 | [Logistic Regression](http://dx.doi.org/10.2139/ssrn.360300) models the relationship between the probability of an event (among two outcome levels) by having the log-odds of the event be a linear combination of a set of predictors weighted by their respective parameter estimates. The parameters are estimated via maximum likelihood estimation by testing different values through multiple iterations to optimize for the best fit of log odds. All of these iterations produce the log likelihood function, and logistic regression seeks to maximize this function to find the best parameter estimates. Given the optimal parameters, the conditional probabilities for each observation can be calculated, logged, and summed together to yield a predicted probability.
 |
@@ -1677,6 +1772,10 @@ Oversampling is only performed within minority class instances in the danger cat
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Minimal overlap between both classes was observed driving better differentiation although a minimal skew was still present due to a longer tail for the predicted points belonging to the majority class.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.7, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1802,6 +1901,8 @@ LR_OS_BSMOTE_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.8 Oversampling - Synthetic Minority Oversampling Technique  (LR_OS_SMOTE)
 |
 | [Synthetic Minority Oversampling Technique](https://dl.acm.org/doi/10.5555/1622407.1622416) generates new minority instances between existing instances. The new instances created are not just the copy of existing minority cases, instead the algorithm takes sample of feature space for each target class and its neighbors and then generates new instances that combine the features of the target cases with features of its neighbors.
@@ -1820,6 +1921,10 @@ LR_OS_BSMOTE_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes was observed.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.8, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -1942,6 +2047,8 @@ LR_OS_SMOTE_Model_Predictions %>%
 
 ```
 
+</details>
+
 ###  1.5.9 Oversampling - Random Oversampling Examples  (LR_OS_ROSE)
 |
 | [Random Oversampling Examples](https://link.springer.com/article/10.1007/s10618-012-0295-5) generates synthetic data by enlarging the feature space of minority and majority class instances. The algorithm draws new examples from a conditional kernel density estimate of the two classes. The kernel is a normal product function centered at each of the instances with diagonal covariance matrix defined with the width of the neighborhood which is the asymptotically optimal smoothing matrix under the assumption of multivariate normality. 
@@ -1960,6 +2067,10 @@ LR_OS_SMOTE_Model_Predictions %>%
 |
 | **[D]** The logistic curve formulated by plotting the predicted probabilities against the classification index using the logit values showed a sufficiently balanced logistic profile for the predicted points from both the majority and minority classes. Although the ratio of the unique values and number of instances was relatively high, a significant overlap between both classes was observed.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5.9, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -2082,6 +2193,7 @@ LR_OS_ROSE_Model_Predictions %>%
 
 ```
 
+</details>
 
 ## 1.6 Evaluation Summary
 |
@@ -2097,6 +2209,10 @@ LR_OS_ROSE_Model_Predictions %>%
 |             **[C.1.1]** A sufficiently balanced logistic profile for the predicted points from both the majority and minority classes was achieved.
 |             **[C.1.2]** Minimal overlap between both classes was obtained although a minimal skew was still observed due to a longer tail for the predicted points belonging to the majority class.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.6, warning=FALSE, message=FALSE}
 ##################################
 # Visualizing the imbalanced data set
@@ -2446,6 +2562,8 @@ annotate_figure(RLR_LogisticCurvePlot,
                                 size = 14))
 
 ```
+
+</details>
 
 # **2. References**
 |
