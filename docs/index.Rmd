@@ -1,5 +1,5 @@
 ---
-title: "R : Comparing Oversampling and Undersampling Algorithms for Class Imbalance Treatment"
+title: "Data Preprocessing : Comparing Oversampling and Undersampling Algorithms for Class Imbalance Treatment"
 author: "John Pauline Pineda"
 date: "April 30, 2023"
 output: 
