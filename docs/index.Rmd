@@ -2177,7 +2177,7 @@ LR_OS_ROSE_Model_Predictions %>%
 
 </details>
 
-## 1.6 Consolidated Summary
+## 1.6 Consolidated Findings
 |
 | **[A]** The option to apply either an undersampling and oversampling method to augment imbalanced data prior to model training is predominantly driven by the quality and characteristics of the data set at hand. For large-sized data sets, undersampling methods may still prove effective in achieving balanced class distributions while maintaining a sufficient number of instances and reasonable computation complexity. For small- to medium-sized data sets, oversampling methods may help to maximize data augmentation while avoiding data sparsity in the resulting data update. The effectiveness of certain algorithms may vary depending on how discriminative the predictors are in distinguishing between classes.
 | **[B]** Using the logistic regression model, the algorithm which demonstrated relatively better performance among other undersampling methods is the following:
