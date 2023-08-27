@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 
 # **1. Table of Contents**
 |
-| This project explores different oversampling and undersampling methods to address imbalanced classification problems using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. The algorithms applied to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class included **Near Miss**, **Tomek Links**, **Adaptive Synthetic Algorithm**, **Borderline Synthetic Minority Oversampling Technique**, **Synthetic Minority Oversampling Technique** and **Random Oversampling Examples**. The derived class distributions were compared to the original data set and those applied with both random undersampling and oversampling methods. Using the Logistic Regression model structure, the corresponding logistic curves estimated from both the original and updated data were subjectively assessed in terms of skewness, data sparsity and class overlap. Considering the differences in their intended applications dependent on the quality and characteristics of the data being evaluated, a comparison of each method’s strengths and limitations was briefly discussed.
+| This project explores different oversampling and undersampling methods to address imbalanced classification problems using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. The algorithms applied to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class included **Near Miss**, **Tomek Links**, **Adaptive Synthetic Algorithm**, **Borderline Synthetic Minority Oversampling Technique**, **Synthetic Minority Oversampling Technique** and **Random Oversampling Examples**. The derived class distributions were compared to the original data set and those applied with both random undersampling and oversampling methods. Using the Logistic Regression model structure, the corresponding logistic curves estimated from both the original and updated data were subjectively assessed in terms of skewness, data sparsity and class overlap. Considering the differences in their intended applications dependent on the quality and characteristics of the data being evaluated, a comparison of each method’s strengths and limitations was briefly discussed. All results were consolidated in a [<span style="color: #FF0000">**Summary**</span>](#summary) presented at the end of the document.
 |
 | Oversampling and undersampling algorithms address imbalanced classification problems by augmenting the data set used for model training based on its inherent characteristics to achieve a more reasonably balanced distribution between the majority and minority classes. In oversampling, new instances are created from the minor class instead of merely creating copies, by selecting two or more similar instances (using a distance measure) and perturbing an instance one attribute at a time by a random amount within the difference to the neighboring instances. In undersampling, a subset of instances from the majority class is removed based on relationships between nearest neighbors by having the minimum distance in the feature space with other instances belonging to the minority classes. The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**caret**</mark>, <mark style="background-color: #CCECFF">**themis**</mark> and <mark style="background-color: #CCECFF">**ROSE**</mark> packages attempt to augment imbalanced data prior to model training by updating the original data set to minimize the effect of the disproportionate ratio of instances in each class.
 |
@@ -118,8 +118,6 @@ PDA <- Sonar_Train
 </details>
 
 ##  1.2 Data Quality Assessment
-|
-| Data quality assessment:
 |
 | **[A]** No missing observations noted for any variable.
 |
@@ -356,8 +354,6 @@ if (length(names(DQA.Predictors.Numeric))==0) {
 
 ###  1.3.1 Outlier
 |
-| Outlier data assessment:
-|
 | **[A]** Outliers noted for 2 variables  with the numeric data visualized through a boxplot including observations classified as suspected outliers using the IQR criterion. The IQR criterion means that all observations above the (75th percentile + 1.5 x IQR) or below the (25th percentile - 1.5 x IQR) are suspected outliers, where IQR is the difference between the third quartile (75th percentile) and first quartile (25th percentile). Outlier treatment for numerical stability remains optional depending on potential model requirements for the subsequent steps.
 |      **[A.1]** <span style="color: #FF0000">V1</span> variable (8 outliers detected)
 |      **[A.2]** <span style="color: #FF0000">V11</span> variable (5 outliers detected)
@@ -420,8 +416,6 @@ dim(DPA.Predictors.Numeric)
 </details>
 
 ###  1.3.2 Zero and Near-Zero Variance
-|
-| Zero and near-zero variance data assessment:
 |
 | **[A]** No low variance noted for any variable from the previous data quality assessment using a lower threshold.
 |
@@ -501,8 +495,6 @@ if ((nrow(DPA_LowVariance[DPA_LowVariance$nzv,]))==0){
 </details>
 
 ###  1.3.3 Collinearity
-|
-| High collinearity data assessment:
 |
 | **[A]** No high correlation > 95% were noted for any variable as confirmed using the preprocessing summaries from the <mark style="background-color: #CCECFF">**caret**</mark> and <mark style="background-color: #CCECFF">**lares**</mark> packages.
 |
@@ -615,8 +607,6 @@ if (DPA_HighlyCorrelatedCount > 0) {
 
 ###  1.3.4 Linear Dependencies
 |
-| Linear dependency data assessment:
-|
 | **[A]** No linear dependencies noted for any subset of variables using the preprocessing summary from the <mark style="background-color: #CCECFF">**caret**</mark> package applying the <span style="color: #0000FF">findLinearCombos</span> method which utilizes the QR decomposition of a matrix to enumerate sets of linear combinations (if they exist). 
 |
 |
@@ -713,8 +703,6 @@ if (DPA_LinearlyDependentCount > 0) {
 
 ###  1.3.5 Shape Transformation
 |
-| Data transformation assessment:
-|
 | **[A]** A number of numeric variables in the dataset were observed to be right-skewed which required shape transformation for data distribution stability. Considering that all numeric variables were strictly positive values, the <span style="color: #0000FF">BoxCox</span> method from the <mark style="background-color: #CCECFF">**caret**</mark> package was used to transform their distributional shapes.
 |
 |
@@ -758,8 +746,6 @@ dim(DPA_BoxCoxTransformed)
 </details>
 
 ###  1.3.6 Centering and Scaling
-|
-| Centering and scaling data assessment:
 |
 | **[A]** To maintain numerical stability during modelling, centering and scaling transformations were applied on the transformed numeric variables. The <span style="color: #0000FF">center</span> method from the <mark style="background-color: #CCECFF">**caret**</mark> package was implemented which subtracts the average value of a numeric variable to all the values. As a result of centering, the variables had zero mean values. In addition, the <span style="color: #0000FF">scale</span> method, also from the <mark style="background-color: #CCECFF">**caret**</mark> package, was applied which performs a center transformation with each value of the variable divided by its standard deviation. Scaling the data coerced the values to have a common standard deviation of one.
 |
@@ -811,8 +797,6 @@ dim(DPA.Predictors.Numeric_BoxCoxTransformed_CenteredScaledTransformed)
 
 ###  1.3.7 Pre-Processed Dataset
 |
-| Preliminary dataset assessment:
-|
 | **[A]** 136 rows (observations)
 |      **[A.1]** Train Set = 136 observations with class ratio of 80:20
 | 
@@ -858,8 +842,6 @@ dim(PMA_PreModelling_Train)
 </details>
 
 ## 1.4 Data Exploration
-|
-| Exploratory data analysis:
 |
 | **[A]** Both <span style="color: #FF0000">V1</span> and <span style="color: #FF0000">V11</span> numeric variables demonstrated differential relationships with the <span style="color: #FF0000">Class</span> response variable.
 |
@@ -2195,9 +2177,7 @@ LR_OS_ROSE_Model_Predictions %>%
 
 </details>
 
-## 1.6 Evaluation Summary
-|
-| Undersampling and oversampling algorithm comparison:
+## 1.6 Consolidated Summary
 |
 | **[A]** The option to apply either an undersampling and oversampling method to augment imbalanced data prior to model training is predominantly driven by the quality and characteristics of the data set at hand. For large-sized data sets, undersampling methods may still prove effective in achieving balanced class distributions while maintaining a sufficient number of instances and reasonable computation complexity. For small- to medium-sized data sets, oversampling methods may help to maximize data augmentation while avoiding data sparsity in the resulting data update. The effectiveness of certain algorithms may vary depending on how discriminative the predictors are in distinguishing between classes.
 | **[B]** Using the logistic regression model, the algorithm which demonstrated relatively better performance among other undersampling methods is the following:
@@ -2564,8 +2544,12 @@ annotate_figure(RLR_LogisticCurvePlot,
 ```
 
 </details>
-
-# **2. References**
+|
+# **2. Summary** <a name="summary"></a>
+|
+| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_30/docs/Project30_Summary.png)
+|
+# **3. References**
 |
 | **[Book]** [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) by Max Kuhn and Kjell Johnson
 | **[Book]** [An Introduction to Statistical Learning](https://www.statlearning.com/) by Gareth James, Daniela Witten, Trevor Hastie and Rob Tibshirani
